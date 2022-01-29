@@ -1,5 +1,7 @@
 package com.example.testapp;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -8,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,9 +26,26 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    public NotificationManagerCompat man;
+
+    public static final String CHANNEL = "Hello?";
+
+    private void createNotificationChannel() {
+        CharSequence name = "channel naem";
+        String desc = "aahahha";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel chan = new NotificationChannel(CHANNEL, name, importance);
+        chan.setDescription(desc);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(chan);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        createNotificationChannel();
+        man = NotificationManagerCompat.from(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
