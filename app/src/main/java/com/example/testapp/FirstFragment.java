@@ -59,6 +59,7 @@ public class FirstFragment extends Fragment {
                 b.setContentText("jifeowjioefw");
                 b.setContentTitle("jie88888");
                 b.setContentIntent(pendingIntent);
+                b.setAutoCancel(true);
                 ((MainActivity)getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
             }
         });
