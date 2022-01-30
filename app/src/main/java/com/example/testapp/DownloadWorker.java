@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
+import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -15,6 +16,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 public class DownloadWorker extends Worker {
+    public static final String UNIQUE_NAME = "downloadWorker";
+
     public DownloadWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -22,7 +25,8 @@ public class DownloadWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        String url = "https://xn--yh8hfqgj.ws/";
+        //String url = "https://xn--yh8hfqgj.ws/";
+        String url = "https://www.timeapi.io/api/Time/current/zone?timeZone=America/New_York";
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, future, future);
         Volley.newRequestQueue(getApplicationContext()).add(stringRequest);

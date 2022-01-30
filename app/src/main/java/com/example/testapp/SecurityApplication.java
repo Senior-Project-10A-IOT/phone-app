@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.res.Configuration;
 import android.util.Log;
 
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -12,9 +13,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class SecurityApplication extends Application {
-    public static UUID request;
     public static RequestQueue requestQueue;
 
     @Override
@@ -22,16 +23,14 @@ public class SecurityApplication extends Application {
         super.onCreate();
 
         requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-        WorkRequest workRequest = OneTimeWorkRequest.from(DownloadWorker.class);
-        request = workRequest.getId();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        retryRequest();
     }
 
     public void retryRequest() {
-        WorkRequest workRequest = OneTimeWorkRequest.from(DownloadWorker.class);
-        request = workRequest.getId();
-        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
+                .setInitialDelay(1, TimeUnit.SECONDS).build();
+        WorkManager.getInstance(getApplicationContext())
+                .enqueueUniqueWork(DownloadWorker.UNIQUE_NAME, ExistingWorkPolicy.REPLACE, workRequest);
         Log.d("security", "retry network request");
     }
 

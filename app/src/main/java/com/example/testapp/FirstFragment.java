@@ -17,17 +17,23 @@ import com.example.testapp.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
+    private boolean firstLoad = true;
 
     private void doWorkerStuff() {
-        WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.request).observe(getViewLifecycleOwner(), workInfo -> {
-            if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                binding.networkText.setText(workInfo.getOutputData().getString(""));
-            } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
-                binding.networkText.setText("Network failed");
-            } else {
-                binding.networkText.setText("Loading...");
-            }
-        });
+        WorkManager.getInstance(getContext())
+                .getWorkInfosForUniqueWorkLiveData(DownloadWorker.UNIQUE_NAME)
+                .observe(getViewLifecycleOwner(), workInfos -> {
+                    WorkInfo workInfo = workInfos.get(0);
+                    if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                        binding.networkText.setText(workInfo.getOutputData().getString(""));
+                        ((SecurityApplication) getActivity().getApplication()).retryRequest();
+                    } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
+                        binding.networkText.setText("Network failed");
+                    } else if (firstLoad) {
+                        binding.networkText.setText("Loading...");
+                        firstLoad = false;
+                    }
+                });
     }
 
     @Override
