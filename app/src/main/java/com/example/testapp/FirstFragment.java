@@ -13,13 +13,7 @@ import androidx.navigation.NavDeepLinkBuilder;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
 import com.example.testapp.databinding.FragmentFirstBinding;
-import com.google.android.material.snackbar.Snackbar;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
@@ -34,47 +28,34 @@ public class FirstFragment extends Fragment {
 
         a = "AAAAA";
         binding.textView.setText(a + "h");
-        binding.aaaa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                a = a + "aaaaaaaaaaaaaAAAaa";
-                binding.textView.setText(a + "h!");
-            }
+        binding.aaaa.setOnClickListener(view -> {
+            a = a + "aaaaaaaaaaaaaAAAaa";
+            binding.textView.setText(a + "h!");
         });
 
-        binding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
-                        .setComponentName(MainActivity.class)
-                        .setGraph(R.navigation.nav_graph)
-                        .setDestination(R.id.FirstFragment)
-                        .setArguments(getArguments())
-                        .createPendingIntent();
+        binding.button.setOnClickListener(view -> {
+            PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
+                    .setComponentName(MainActivity.class)
+                    .setGraph(R.navigation.nav_graph)
+                    .setDestination(R.id.FirstFragment)
+                    .setArguments(getArguments())
+                    .createPendingIntent();
 
-                NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL);
-                b.setSmallIcon(R.drawable.ic_launcher_foreground);
-                b.setContentText("jifeowjioefw");
-                b.setContentTitle("jie88888");
-                b.setContentIntent(pendingIntent);
-                b.setAutoCancel(true);
-                ((MainActivity)getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
-            }
+            NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL);
+            b.setSmallIcon(R.drawable.ic_launcher_foreground);
+            b.setContentText("jifeowjioefw");
+            b.setContentTitle("jie88888");
+            b.setContentIntent(pendingIntent);
+            b.setAutoCancel(true);
+            ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
         });
 
-        //WorkManager.getInstance(getContext()).getWorkInfoById(SecurityApplication.request).addListener(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        Snackbar.make(requireView(), "poggers", Snackbar.LENGTH_LONG).show();
-        //    }
-        //}, getContext().getMainExecutor());
         WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.request).observe(getViewLifecycleOwner(), workInfo -> {
             if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
                 binding.networkText.setText(workInfo.getOutputData().getString(""));
             }
         });
 
-        //WorkManager.getInstance(getContext()).getWorkInfoById()
         return binding.getRoot();
     }
 

@@ -3,37 +3,24 @@ package com.example.testapp;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
-
 import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.example.testapp.databinding.ActivityMainBinding;
 
-import android.view.Menu;
-import android.view.MenuItem;
-
-import java.util.UUID;
-
 public class MainActivity extends AppCompatActivity {
 
+    public static final String CHANNEL = "Hello?";
+    public NotificationManagerCompat man;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-
-    public NotificationManagerCompat man;
-
-    public static final String CHANNEL = "Hello?";
 
     private void createNotificationChannel() {
         CharSequence name = "channel naem";

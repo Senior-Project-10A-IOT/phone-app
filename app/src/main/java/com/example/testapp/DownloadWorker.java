@@ -8,17 +8,9 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import java.io.IOException;
-import java.security.cert.Certificate;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLPeerUnverifiedException;
 
 public class DownloadWorker extends Worker {
     public DownloadWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -30,7 +22,8 @@ public class DownloadWorker extends Worker {
     public Result doWork() {
         try {
             Thread.sleep(5000);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         String url = "https://xn--yh8hfqgj.ws";
         RequestFuture<String> future = RequestFuture.newFuture();
