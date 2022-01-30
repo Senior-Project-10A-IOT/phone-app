@@ -14,11 +14,9 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import com.example.testapp.databinding.FragmentFirstBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -64,29 +62,19 @@ public class FirstFragment extends Fragment {
             }
         });
 
-        WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.REQUEST).observe(getViewLifecycleOwner(), workInfo -> {
+        //WorkManager.getInstance(getContext()).getWorkInfoById(SecurityApplication.request).addListener(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        Snackbar.make(requireView(), "poggers", Snackbar.LENGTH_LONG).show();
+        //    }
+        //}, getContext().getMainExecutor());
+        WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.request).observe(getViewLifecycleOwner(), workInfo -> {
             if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                Snackbar.make(requireView(), "poggers", Snackbar.LENGTH_LONG).show();
+                binding.networkText.setText(workInfo.getOutputData().getString(""));
             }
         });
 
         //WorkManager.getInstance(getContext()).getWorkInfoById()
-        RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = "https://xn--yh8hfqgj.ws";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                binding.networkText.setText(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                binding.networkText.setText(error.toString());
-            }
-        });
-
-        queue.add(stringRequest);
-
         return binding.getRoot();
     }
 

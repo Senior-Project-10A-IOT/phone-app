@@ -7,17 +7,23 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 import java.util.UUID;
 
 public class SecurityApplication extends Application {
-    public static UUID REQUEST;
+    public static UUID request;
+    public static RequestQueue requestQueue;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+
         WorkRequest workRequest = OneTimeWorkRequest.from(DownloadWorker.class);
-        REQUEST = workRequest.getId();
+        request = workRequest.getId();
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
     }
 
