@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDeepLinkBuilder;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.example.testapp.databinding.FragmentFirstBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
@@ -61,6 +64,13 @@ public class FirstFragment extends Fragment {
             }
         });
 
+        WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.REQUEST).observe(getViewLifecycleOwner(), workInfo -> {
+            if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                Snackbar.make(requireView(), "poggers", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        //WorkManager.getInstance(getContext()).getWorkInfoById()
         RequestQueue queue = Volley.newRequestQueue(getContext());
         String url = "https://xn--yh8hfqgj.ws";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
