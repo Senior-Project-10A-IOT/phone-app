@@ -17,7 +17,18 @@ import com.example.testapp.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
-    private String a;
+
+    private void doWorkerStuff() {
+        WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.request).observe(getViewLifecycleOwner(), workInfo -> {
+            if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                binding.networkText.setText(workInfo.getOutputData().getString(""));
+            } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
+                binding.networkText.setText("Network failed");
+            } else {
+                binding.networkText.setText("Loading...");
+            }
+        });
+    }
 
     @Override
     public View onCreateView(
@@ -26,11 +37,9 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        a = "AAAAA";
-        binding.textView.setText(a + "h");
-        binding.aaaa.setOnClickListener(view -> {
-            a = a + "aaaaaaaaaaaaaAAAaa";
-            binding.textView.setText(a + "h!");
+        binding.retry.setOnClickListener(view -> {
+            ((SecurityApplication)getActivity().getApplication()).retryRequest();
+            doWorkerStuff();
         });
 
         binding.button.setOnClickListener(view -> {
@@ -50,11 +59,7 @@ public class FirstFragment extends Fragment {
             ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
         });
 
-        WorkManager.getInstance(getContext()).getWorkInfoByIdLiveData(SecurityApplication.request).observe(getViewLifecycleOwner(), workInfo -> {
-            if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                binding.networkText.setText(workInfo.getOutputData().getString(""));
-            }
-        });
+        doWorkerStuff();
 
         return binding.getRoot();
     }

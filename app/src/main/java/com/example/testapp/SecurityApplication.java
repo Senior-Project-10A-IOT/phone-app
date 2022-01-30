@@ -2,6 +2,7 @@ package com.example.testapp;
 
 import android.app.Application;
 import android.content.res.Configuration;
+import android.util.Log;
 
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -25,6 +26,13 @@ public class SecurityApplication extends Application {
         WorkRequest workRequest = OneTimeWorkRequest.from(DownloadWorker.class);
         request = workRequest.getId();
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+    }
+
+    public void retryRequest() {
+        WorkRequest workRequest = OneTimeWorkRequest.from(DownloadWorker.class);
+        request = workRequest.getId();
+        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
+        Log.d("security", "retry network request");
     }
 
     @Override
