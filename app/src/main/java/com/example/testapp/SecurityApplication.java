@@ -7,12 +7,10 @@ import android.util.Log;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class SecurityApplication extends Application {

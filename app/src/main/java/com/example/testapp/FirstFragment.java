@@ -44,7 +44,7 @@ public class FirstFragment extends Fragment {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
         binding.retry.setOnClickListener(view -> {
-            ((SecurityApplication)getActivity().getApplication()).retryRequest();
+            ((SecurityApplication) getActivity().getApplication()).retryRequest();
             doWorkerStuff();
         });
 

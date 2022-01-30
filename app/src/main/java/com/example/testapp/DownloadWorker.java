@@ -5,12 +5,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
-import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
