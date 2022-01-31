@@ -21,15 +21,17 @@ public class SecurityApplication extends Application {
         super.onCreate();
 
         requestQueue = Volley.newRequestQueue(getApplicationContext());
-        retryRequest();
+        retryRequest(false);
     }
 
-    public void retryRequest() {
+    public void retryRequest(boolean doDelay) {
+        int delay = 1;
+        if (!doDelay) delay = 0;
+
         OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(DownloadWorker.class)
-                .setInitialDelay(1, TimeUnit.SECONDS).build();
+                .setInitialDelay(delay, TimeUnit.SECONDS).build();
         WorkManager.getInstance(getApplicationContext())
                 .enqueueUniqueWork(DownloadWorker.UNIQUE_NAME, ExistingWorkPolicy.REPLACE, workRequest);
-        Log.d("security", "retry network request");
     }
 
     @Override

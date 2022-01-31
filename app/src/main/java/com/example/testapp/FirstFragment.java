@@ -26,7 +26,7 @@ public class FirstFragment extends Fragment {
                     WorkInfo workInfo = workInfos.get(0);
                     if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
                         binding.networkText.setText(workInfo.getOutputData().getString(""));
-                        ((SecurityApplication) getActivity().getApplication()).retryRequest();
+                        ((SecurityApplication) getActivity().getApplication()).retryRequest(true);
                     } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
                         binding.networkText.setText("Network failed");
                     } else if (firstLoad) {
@@ -44,7 +44,7 @@ public class FirstFragment extends Fragment {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
         binding.retry.setOnClickListener(view -> {
-            ((SecurityApplication) getActivity().getApplication()).retryRequest();
+            ((SecurityApplication) getActivity().getApplication()).retryRequest(false);
             doWorkerStuff();
         });
 
