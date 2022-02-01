@@ -58,8 +58,8 @@ public class FirstFragment extends Fragment {
 
             NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL);
             b.setSmallIcon(R.drawable.ic_launcher_foreground);
-            b.setContentText("jifeowjioefw");
-            b.setContentTitle("jie88888");
+            b.setContentText("This is a test notification.");
+            b.setContentTitle("Security alert");
             b.setContentIntent(pendingIntent);
             b.setAutoCancel(true);
             ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
