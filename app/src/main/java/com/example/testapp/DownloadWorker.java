@@ -23,7 +23,9 @@ public class DownloadWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        //String url = "https://xn--yh8hfqgj.ws/";
+        // TODO 🤞
+        //String url = "https://aw62mbu5dp5po-ats.iot.us-east-1.amazonaws.com/things/raspi/shadow";
+
         String url = "https://www.timeapi.io/api/Time/current/zone?timeZone=America/New_York";
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, future, future);
