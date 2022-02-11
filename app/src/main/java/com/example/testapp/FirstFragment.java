@@ -2,6 +2,7 @@ package com.example.testapp;
 
 import android.app.PendingIntent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,13 @@ import androidx.navigation.NavDeepLinkBuilder;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttLastWillAndTestament;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
 import com.example.testapp.databinding.FragmentFirstBinding;
+
+import java.io.UnsupportedEncodingException;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
@@ -64,6 +71,57 @@ public class FirstFragment extends Fragment {
             b.setAutoCancel(true);
             ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
         });
+
+        SecurityApplication.mqttManager.connect(SecurityApplication.credentialsProvider, new AWSIotMqttClientStatusCallback() {
+            @Override
+            public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (status == AWSIotMqttClientStatus.Connecting) {
+                            binding.connectionStatus.setText("Connecting...");
+
+                        } else if (status == AWSIotMqttClientStatus.Connected) {
+                            binding.connectionStatus.setText("Connected");
+
+                        } else if (status == AWSIotMqttClientStatus.Reconnecting) {
+                            if (throwable != null) {
+                                Log.e("ack", "Connection error.", throwable);
+                            }
+                            binding.connectionStatus.setText("Reconnecting");
+                        } else if (status == AWSIotMqttClientStatus.ConnectionLost) {
+                            if (throwable != null) {
+                                Log.e("ack", "Connection error.", throwable);
+                                throwable.printStackTrace();
+                            }
+                            binding.connectionStatus.setText("Disconnected");
+                        } else {
+                            binding.connectionStatus.setText("Disconnected");
+                        }
+                    }
+                });
+            }
+        });
+
+        binding.shadowMessage.setText("no response from device...");
+
+        SecurityApplication.mqttManager.subscribeToTopic("$aws/things/raspi/shadow/get", AWSIotMqttQos.QOS0, new AWSIotMqttNewMessageCallback() {
+            @Override
+            public void onMessageArrived(String topic, byte[] data) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String message = new String(data, "UTF-8");
+                            binding.shadowMessage.setText(message);
+                        } catch (UnsupportedEncodingException e) {
+                            binding.shadowMessage.setText(e.toString());
+                        }
+                    }
+                });
+            }
+        });
+
 
         doWorkerStuff();
 
