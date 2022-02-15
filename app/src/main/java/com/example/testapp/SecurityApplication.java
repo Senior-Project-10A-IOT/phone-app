@@ -19,6 +19,9 @@ public class SecurityApplication extends Application {
     public static AWSIotMqttManager mqttManager;
     public static CognitoCachingCredentialsProvider credentialsProvider;
     String clientId;
+    public static final String GET_TOPIC = "$aws/things/raspi/shadow/get";
+    public static final String GET_ACCEPTED_TOPIC = GET_TOPIC + "/accepted";
+    public static final String GET_REJECTED_TOPIC = GET_TOPIC + "/rejected";
 
     @Override
     public void onCreate() {

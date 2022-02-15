@@ -14,6 +14,7 @@ import androidx.navigation.NavDeepLinkBuilder;
 
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttSubscriptionStatusCallback;
 import com.example.testapp.databinding.FragmentFirstBinding;
 
 import java.io.UnsupportedEncodingException;
@@ -28,7 +29,7 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        binding.button.setOnClickListener(view -> {
+        binding.testNoto.setOnClickListener(view -> {
             PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
                     .setComponentName(MainActivity.class)
                     .setGraph(R.navigation.nav_graph)
@@ -74,9 +75,21 @@ public class FirstFragment extends Fragment {
         binding.shadowMessage.setText("no response from device...");
 
         SecurityApplication.mqttManager.subscribeToTopic(
-            "$aws/things/raspi/shadow/get",
-            AWSIotMqttQos.QOS0,
-            (topic, data) -> getActivity().runOnUiThread(() -> {
+                SecurityApplication.GET_ACCEPTED_TOPIC,
+                AWSIotMqttQos.QOS1,
+                new AWSIotMqttSubscriptionStatusCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.i("", "acepted ok");
+                    }
+
+                    @Override
+                    public void onFailure(Throwable exception) {
+                        Log.e("", "accepted not ok");
+                    }
+                },
+        (topic, data) -> getActivity().runOnUiThread(() -> {
+                Log.e("", "accepted");
                 try {
                     String message = new String(data, "UTF-8");
                     binding.shadowMessage.setText(message);
@@ -85,6 +98,37 @@ public class FirstFragment extends Fragment {
                 }
             })
         );
+
+        SecurityApplication.mqttManager.subscribeToTopic(
+                SecurityApplication.GET_REJECTED_TOPIC,
+                AWSIotMqttQos.QOS1,
+                new AWSIotMqttSubscriptionStatusCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.i("", "rejeced ok");
+                    }
+
+                    @Override
+                    public void onFailure(Throwable exception) {
+                        Log.e("", "rejecte not ok");
+                    }
+                },
+                (topic, data) -> getActivity().runOnUiThread(() -> {
+                    Log.e("", "rejected");
+                    try {
+                        String message = new String(data, "UTF-8");
+                        binding.shadowMessage.setText(message);
+                    } catch (UnsupportedEncodingException e) {
+                        binding.shadowMessage.setText(e.toString());
+                    }
+                })
+        );
+
+        binding.publishSomething.setOnClickListener(view -> {
+            Log.d("", "publish get");
+            byte[] data = {};
+            SecurityApplication.mqttManager.publishData(data, SecurityApplication.GET_TOPIC, AWSIotMqttQos.QOS0);
+        });
 
         return binding.getRoot();
     }
