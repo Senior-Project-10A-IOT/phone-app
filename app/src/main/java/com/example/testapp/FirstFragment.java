@@ -47,79 +47,80 @@ public class FirstFragment extends Fragment {
         });
 
         SecurityApplication.mqttManager.connect(
-            SecurityApplication.credentialsProvider,
-            (status, throwable) -> getActivity().runOnUiThread(() -> {
-                if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connecting) {
-                    binding.connectionStatus.setText("Connecting...");
-
-                } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connected) {
-                    binding.connectionStatus.setText("Connected");
-
-                } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Reconnecting) {
-                    if (throwable != null) {
-                        Log.e("ack", "Connection error.", throwable);
+                SecurityApplication.credentialsProvider,
+                (status, throwable) -> getActivity().runOnUiThread(() -> {
+                    if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connecting) {
+                        binding.connectionStatus.setText("Connecting...");
+                    } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connected) {
+                        binding.connectionStatus.setText("Connected");
+                    } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Reconnecting) {
+                        if (throwable != null) {
+                            Log.e("ack", "Connection error.", throwable);
+                        }
+                        binding.connectionStatus.setText("Reconnecting");
+                    } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost) {
+                        if (throwable != null) {
+                            Log.e("ack", "Connection error.", throwable);
+                            throwable.printStackTrace();
+                        }
+                        binding.connectionStatus.setText("Disconnected");
+                    } else {
+                        binding.connectionStatus.setText("Disconnected");
                     }
-                    binding.connectionStatus.setText("Reconnecting");
-                } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost) {
-                    if (throwable != null) {
-                        Log.e("ack", "Connection error.", throwable);
-                        throwable.printStackTrace();
-                    }
-                    binding.connectionStatus.setText("Disconnected");
-                } else {
-                    binding.connectionStatus.setText("Disconnected");
-                }
-            })
+                })
         );
 
         binding.shadowMessage.setText("no response from device...");
 
         SecurityApplication.mqttManager.subscribeToTopic(
-                SecurityApplication.GET_ACCEPTED_TOPIC,
+                SecurityApplication.SHADOW_GET_ACCEPTED_TOPIC,
                 AWSIotMqttQos.QOS1,
                 new AWSIotMqttSubscriptionStatusCallback() {
                     @Override
                     public void onSuccess() {
-                        Log.i("", "acepted ok");
+                        Log.i("", "accepted successfully subscribed");
                     }
 
                     @Override
                     public void onFailure(Throwable exception) {
-                        Log.e("", "accepted not ok");
-                    }
-                },
-        (topic, data) -> getActivity().runOnUiThread(() -> {
-                Log.e("", "accepted");
-                try {
-                    String message = new String(data, "UTF-8");
-                    binding.shadowMessage.setText(message);
-                } catch (UnsupportedEncodingException e) {
-                    binding.shadowMessage.setText(e.toString());
-                }
-            })
-        );
-
-        SecurityApplication.mqttManager.subscribeToTopic(
-                SecurityApplication.GET_REJECTED_TOPIC,
-                AWSIotMqttQos.QOS1,
-                new AWSIotMqttSubscriptionStatusCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.i("", "rejeced ok");
-                    }
-
-                    @Override
-                    public void onFailure(Throwable exception) {
-                        Log.e("", "rejecte not ok");
+                        Log.e("", "accepted could not subscribe", exception);
                     }
                 },
                 (topic, data) -> getActivity().runOnUiThread(() -> {
-                    Log.e("", "rejected");
+                    Log.e("", "accepted");
                     try {
                         String message = new String(data, "UTF-8");
-                        binding.shadowMessage.setText(message);
+                        binding.shadowMessage.setText(topic + " " + message);
                     } catch (UnsupportedEncodingException e) {
-                        binding.shadowMessage.setText(e.toString());
+                        binding.shadowMessage.setText(topic + " " + e);
+                    }
+                })
+        );
+
+        //SecurityApplication.mqttManager.subscribeToTopic(
+        //        SecurityApplication.GET_REJECTED_TOPIC,
+        //        AWSIotMqttQos.QOS1,
+        //        (topic, data) -> getActivity().runOnUiThread(() -> {
+        //            Log.e("", "rejected");
+        //            try {
+        //                String message = new String(data, "UTF-8");
+        //                binding.shadowMessage.setText(topic + " " + message);
+        //            } catch (UnsupportedEncodingException e) {
+        //                binding.shadowMessage.setText(topic + " " + e);
+        //            }
+        //        })
+        //);
+
+        SecurityApplication.mqttManager.subscribeToTopic(
+                SecurityApplication.SHADOW_UPDATE_DOCUMENTS_TOPIC,
+                AWSIotMqttQos.QOS0,
+                (topic, data) -> getActivity().runOnUiThread(() -> {
+                    Log.e("", "accepted");
+                    try {
+                        String message = new String(data, "UTF-8");
+                        binding.shadowMessage.setText(topic + " " + message);
+                    } catch (UnsupportedEncodingException e) {
+                        binding.shadowMessage.setText(topic + " " + e);
                     }
                 })
         );
@@ -127,7 +128,7 @@ public class FirstFragment extends Fragment {
         binding.publishSomething.setOnClickListener(view -> {
             Log.d("", "publish get");
             byte[] data = {};
-            SecurityApplication.mqttManager.publishData(data, SecurityApplication.GET_TOPIC, AWSIotMqttQos.QOS0);
+            SecurityApplication.mqttManager.publishData(data, SecurityApplication.SHADOW_GET_TOPIC, AWSIotMqttQos.QOS0);
         });
 
         return binding.getRoot();
