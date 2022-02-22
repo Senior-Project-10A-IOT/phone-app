@@ -55,12 +55,12 @@ public class FirstFragment extends Fragment {
                         binding.connectionStatus.setText("Connected");
                     } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Reconnecting) {
                         if (throwable != null) {
-                            Log.e("ack", "Connection error.", throwable);
+                            Log.e(SecurityApplication.TAG, "Connection error.", throwable);
                         }
                         binding.connectionStatus.setText("Reconnecting");
                     } else if (status == AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost) {
                         if (throwable != null) {
-                            Log.e("ack", "Connection error.", throwable);
+                            Log.e(SecurityApplication.TAG, "Connection error.", throwable);
                             throwable.printStackTrace();
                         }
                         binding.connectionStatus.setText("Disconnected");
@@ -78,16 +78,17 @@ public class FirstFragment extends Fragment {
                 new AWSIotMqttSubscriptionStatusCallback() {
                     @Override
                     public void onSuccess() {
-                        Log.i("", "accepted successfully subscribed");
+                        Log.i(SecurityApplication.TAG, "accepted successfully subscribed");
                     }
 
                     @Override
                     public void onFailure(Throwable exception) {
-                        Log.e("", "accepted could not subscribe", exception);
+                        Log.e(SecurityApplication.TAG
+                                , "accepted could not subscribe", exception);
                     }
                 },
                 (topic, data) -> getActivity().runOnUiThread(() -> {
-                    Log.e("", "accepted");
+                    Log.e(SecurityApplication.TAG, "accepted");
                     try {
                         String message = new String(data, "UTF-8");
                         binding.shadowMessage.setText(topic + " " + message);
@@ -101,7 +102,7 @@ public class FirstFragment extends Fragment {
         //        SecurityApplication.GET_REJECTED_TOPIC,
         //        AWSIotMqttQos.QOS1,
         //        (topic, data) -> getActivity().runOnUiThread(() -> {
-        //            Log.e("", "rejected");
+        //            Log.e(SecurityApp.TAG, "rejected");
         //            try {
         //                String message = new String(data, "UTF-8");
         //                binding.shadowMessage.setText(topic + " " + message);
@@ -115,7 +116,7 @@ public class FirstFragment extends Fragment {
                 SecurityApplication.SHADOW_UPDATE_DOCUMENTS_TOPIC,
                 AWSIotMqttQos.QOS0,
                 (topic, data) -> getActivity().runOnUiThread(() -> {
-                    Log.e("", "accepted");
+                    Log.e(SecurityApplication.TAG, "accepted");
                     try {
                         String message = new String(data, "UTF-8");
                         binding.shadowMessage.setText(topic + " " + message);
@@ -126,7 +127,7 @@ public class FirstFragment extends Fragment {
         );
 
         binding.publishSomething.setOnClickListener(view -> {
-            Log.d("", "publish get");
+            Log.d(SecurityApplication.TAG, "publish get");
             byte[] data = {};
             SecurityApplication.mqttManager.publishData(data, SecurityApplication.SHADOW_GET_TOPIC, AWSIotMqttQos.QOS0);
         });

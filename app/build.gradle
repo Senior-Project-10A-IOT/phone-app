@@ -43,6 +43,11 @@ dependencies {
     //implementation 'com.amazonaws:aws-android-sdk-auth-ui:2.40.0'
     //implementation 'com.amazonaws:aws-android-sdk-auth-userpools:2.40.0'
     implementation 'com.amazonaws:aws-android-sdk-iot:2.40.0'
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.40.0'
+    implementation 'com.amazonaws:aws-android-sdk-cognitoauth:2.40.0'
+    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.40.0'
+
+    //implementation 'com.amplifyframework:core:1.31.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
