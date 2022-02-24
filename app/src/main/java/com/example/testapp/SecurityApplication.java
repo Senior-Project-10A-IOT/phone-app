@@ -3,16 +3,10 @@ package com.example.testapp;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.os.StrictMode;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-
-import java.io.IOException;
 
 public class SecurityApplication extends Application {
     public static RequestQueue requestQueue;

@@ -16,39 +16,17 @@ import com.example.testapp.databinding.FragmentFirstBinding;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
-
-    private class Listener extends WebSocketAdapter {
-        @Override
-        public void onTextMessage(WebSocket ws, String message) {
-            Log.e(SecurityApplication.TAG, message);
-
-            if (message.endsWith("4")) {
-                makeNoto("whoa is a lot");
-            }
-
-            binding.socketResponse.setText(message);
-        }
-
-        @Override
-        public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
-            setConnectedState();
-        }
-
-        @Override
-        public void onDisconnected(WebSocket ws, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) {
-            setDisconnectedState();
-        }
-    }
+    private Listener listener;
+    private WebSocket ws;
+    private boolean connected;
 
     private void makeSocket() {
         try {
@@ -98,10 +76,6 @@ public class FirstFragment extends Fragment {
         ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
     }
 
-    private Listener listener;
-    private WebSocket ws;
-    private boolean connected;
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -146,5 +120,28 @@ public class FirstFragment extends Fragment {
         ws.disconnect();
         setDisconnectedState();
         binding = null;
+    }
+
+    private class Listener extends WebSocketAdapter {
+        @Override
+        public void onTextMessage(WebSocket ws, String message) {
+            Log.e(SecurityApplication.TAG, message);
+
+            if (message.endsWith("4")) {
+                makeNoto("whoa is a lot");
+            }
+
+            binding.socketResponse.setText(message);
+        }
+
+        @Override
+        public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
+            setConnectedState();
+        }
+
+        @Override
+        public void onDisconnected(WebSocket ws, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) {
+            setDisconnectedState();
+        }
     }
 }
