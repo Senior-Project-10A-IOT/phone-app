@@ -38,18 +38,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.4.1'
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'androidx.work:work-runtime:2.7.1'
-
     implementation 'com.neovisionaries:nv-websocket-client:2.14'
-
-    //implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.40.0'
-    //implementation 'com.amazonaws:aws-android-sdk-auth-ui:2.40.0'
-    //implementation 'com.amazonaws:aws-android-sdk-auth-userpools:2.40.0'
-    implementation 'com.amazonaws:aws-android-sdk-iot:2.40.0'
-    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.40.0'
-    implementation 'com.amazonaws:aws-android-sdk-cognitoauth:2.40.0'
-    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.40.0'
-
-    //implementation 'com.amplifyframework:core:1.31.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
