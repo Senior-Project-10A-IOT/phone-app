@@ -8,7 +8,9 @@ import android.util.Log;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSSessionCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.results.SignUpResult;
+import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
@@ -77,106 +79,8 @@ public class SecurityApplication extends Application {
         clientId = UUID.randomUUID().toString();
         mqttManager = new AWSIotMqttManager(clientId, CUSTOMER_SPECIFIC_ENDPOINT);
 
-        Cognito cognito = new Cognito(getApplicationContext());
-        cognito.signUpInBackground("seniorproject10a", "ui_Testing123");
-        //cognito.confirmUser("seniorproject10a",);
-
-        //Log.i(TAG, AWSMobileClient.getInstance().getIdentityId());
-        //ClientConfiguration clientConfiguration = new ClientConfiguration();
-        //// ****
-        //pool = new CognitoUserPool(
-        //        getBaseContext(),
-        //        COGNITO_USER_POOL_ID,
-        //        clientConfiguration
-        //);
-
-        //CognitoUser user = pool.getUser();
-        //user.changePassword("ui_Testing123", "jfeiow_JJ32", new GenericHandler() {
-        //    @Override
-        //    public void onSuccess() {
-        //        Log.e(TAG, "change");
-        //    }
-
-        //    @Override
-        //    public void onFailure(Exception exception) {
-        //        Log.e(TAG, "changefuck" + exception);
-        //    }
-        //});
-        ////user.getSessionInBackground(new AuthenticationHandler() {
-        ////    @Override
-        ////    public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-        ////        Log.e(TAG, "succ");
-        ////    }
-
-        ////    @Override
-        ////    public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
-        ////        AuthenticationDetails details = new AuthenticationDetails(
-        ////                "seniorproject10a",
-        ////                "ui_Testing123",
-        ////                null
-        ////        );
-
-        ////        authenticationContinuation.setAuthenticationDetails(details);
-        ////        authenticationContinuation.continueTask();
-        ////        Log.e(TAG, "deets");
-        ////    }
-
-        ////    @Override
-        ////    public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
-        ////        Log.e(TAG, "fjie");
-        ////    }
-
-        ////    @Override
-        ////    public void authenticationChallenge(ChallengeContinuation continuation) {
-        ////        Log.e(TAG, "jioefwijo");
-        ////        continuation.setChallengeResponse("", "");
-        ////        continuation.continueTask();
-        ////    }
-
-        ////    @Override
-        ////    public void onFailure(Exception exception) {
-        ////        Log.e(TAG, "fjiciwe" + exception);
-        ////    }
-        ////});
-        ////Log.e(TAG, "" + user);
-        //////user.initiateUserAuthentication(details, new AuthenticationHandler() {
-        //////    @Override
-        //////    public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-        //////        Log.e(TAG, "succ");
-        //////    }
-
-        //////    @Override
-        //////    public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
-        //////        Log.e(TAG, "deets");
-        //////    }
-
-        //////    @Override
-        //////    public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
-        //////        Log.e(TAG, "fjie");
-        //////    }
-
-        //////    @Override
-        //////    public void authenticationChallenge(ChallengeContinuation continuation) {
-        //////        Log.e(TAG, "jioefwijo");
-        //////    }
-
-        //////    @Override
-        //////    public void onFailure(Exception exception) {
-        //////        Log.e(TAG, "fjiciwe" + exception);
-        //////    }
-        //////}, true);
-
-        //////pool.signUpInBackground("whoknows", "whatever", attrs, null, new SignUpHandler() {
-        //////    @Override
-        //////    public void onSuccess(CognitoUser user, com.amazonaws.services.cognitoidentityprovider.model.SignUpResult signUpResult) {
-        //////        Log.i(TAG, "whooo " + signUpResult);
-        //////    }
-
-        //////    @Override
-        //////    public void onFailure(Exception exception) {
-        //////        Log.e(TAG, "fuck you" + exception);
-        //////    }
-        //////});
+        AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
+        //pool = new CognitoUserPool(this, configuration);
 
         requestQueue = Volley.newRequestQueue(getApplicationContext());
     }
