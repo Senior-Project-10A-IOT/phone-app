@@ -134,6 +134,8 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        ws.disconnect();
+        setDisconnectedState();
         binding = null;
     }
 }
