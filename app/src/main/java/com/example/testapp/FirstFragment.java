@@ -15,11 +15,70 @@ import androidx.navigation.NavDeepLinkBuilder;
 import com.example.testapp.databinding.FragmentFirstBinding;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFactory;
+import com.neovisionaries.ws.client.WebSocketFrame;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
+
+    private class Listener extends WebSocketAdapter {
+        @Override
+        public void onTextMessage(WebSocket ws, String message) {
+            Log.e(SecurityApplication.TAG, message);
+            binding.socketResponse.setText(message);
+        }
+
+        @Override
+        public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
+            setConnectedState();
+        }
+
+        @Override
+        public void onDisconnected(WebSocket ws, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) {
+            setDisconnectedState();
+        }
+    }
+
+    private void makeSocket() {
+        try {
+            ws = SecurityApplication.factory.createSocket("ws://10.0.2.2:8765/");
+        } catch (IOException e) {
+            Log.e(SecurityApplication.TAG, "create socket: " + e);
+            setDisconnectedState();
+            return;
+        }
+
+        ws.addListener(listener);
+        try {
+            ws.connect();
+            setConnectedState();
+        } catch (WebSocketException e) {
+            Log.e(SecurityApplication.TAG, "connect: " + e);
+            setDisconnectedState();
+        }
+    }
+
+    private void setConnectedState() {
+        binding.connectDisconnect.setText("disconnect");
+        binding.connectionStatus.setText("connected");
+        connected = true;
+    }
+
+    private void setDisconnectedState() {
+        binding.connectDisconnect.setText("connect");
+        binding.connectionStatus.setText("not connected");
+        connected = false;
+    }
+
+    private Listener listener;
+    private WebSocket ws;
+    private boolean connected;
 
     @Override
     public View onCreateView(
@@ -45,15 +104,22 @@ public class FirstFragment extends Fragment {
             ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
         });
 
-        binding.shadowMessage.setText("no response from device...");
-        SecurityApplication.ws.addListener(new WebSocketAdapter() {
-            @Override
-            public void onTextMessage(WebSocket ws, String message) {
-                binding.shadowMessage.setText(message);
-            }
+        setDisconnectedState();
+        listener = new Listener();
+
+        binding.sendMessage.setOnClickListener(view -> {
+            ws.sendText("phone");
         });
 
-        binding.publishSomething.setOnClickListener(view -> SecurityApplication.ws.sendText("phone"));
+        binding.connectDisconnect.setOnClickListener(view -> {
+            if (connected) {
+                ws.disconnect();
+                setDisconnectedState();
+            } else {
+                setConnectedState();
+                makeSocket();
+            }
+        });
 
         return binding.getRoot();
     }

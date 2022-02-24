@@ -17,23 +17,16 @@ import java.io.IOException;
 public class SecurityApplication extends Application {
     public static RequestQueue requestQueue;
     public static String TAG = "secapp";
-    public static WebSocket ws;
+    public static WebSocketFactory factory;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        // TODO move web socket handling to a Worker and do requests
         StrictMode.ThreadPolicy bruh = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(bruh);
 
-        WebSocketFactory factory = new WebSocketFactory();
-        try {
-            //WebSocket ws = factory.createSocket("ws://xn--yh8hfqgj.ws:8765/");
-            ws = factory.createSocket("ws://10.0.2.2:8765/");
-            ws.connect();
-        } catch (IOException | WebSocketException e) {
-            Log.e(TAG, "web socket: " + e);
-        }
-
+        factory = new WebSocketFactory();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
     }
 

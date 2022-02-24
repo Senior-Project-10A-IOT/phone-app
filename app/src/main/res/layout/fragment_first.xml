@@ -6,6 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
+    <TextView
+        android:id="@+id/socketResponse"
+        android:layout_width="268dp"
+        android:layout_height="31dp"
+        android:gravity="center"
+        android:text="message"
+        app:layout_constraintBottom_toTopOf="@+id/connectDisconnect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />
+
+    <TextView
+        android:id="@+id/connectionStatus"
+        android:layout_width="239dp"
+        android:layout_height="29dp"
+        android:gravity="center"
+        android:text="connection status"
+        app:layout_constraintBottom_toTopOf="@+id/socketResponse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/sendMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="send message"
+        app:layout_constraintBottom_toTopOf="@+id/testNoto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connectDisconnect" />
+
+    <Button
+        android:id="@+id/connectDisconnect"
+        android:layout_width="219dp"
+        android:layout_height="45dp"
+        android:text="connect"
+        app:layout_constraintBottom_toTopOf="@+id/sendMessage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/socketResponse" />
+
     <Button
         android:id="@+id/testNoto"
         android:layout_width="wrap_content"
@@ -15,39 +61,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shadowMessage" />
-
-    <TextView
-        android:id="@+id/connectionStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="connection status"
-        app:layout_constraintBottom_toTopOf="@+id/shadowMessage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/shadowMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:text="message"
-        app:layout_constraintBottom_toTopOf="@+id/testNoto"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />
-
-    <Button
-        android:id="@+id/publishSomething"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="pub idk"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/testNoto" />
+        app:layout_constraintTop_toBottomOf="@+id/sendMessage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
