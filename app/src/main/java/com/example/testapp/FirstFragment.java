@@ -31,6 +31,11 @@ public class FirstFragment extends Fragment {
         @Override
         public void onTextMessage(WebSocket ws, String message) {
             Log.e(SecurityApplication.TAG, message);
+
+            if (message.endsWith("4")) {
+                makeNoto("whoa is a lot");
+            }
+
             binding.socketResponse.setText(message);
         }
 
@@ -76,6 +81,23 @@ public class FirstFragment extends Fragment {
         connected = false;
     }
 
+    private void makeNoto(String contentText) {
+        PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
+                .setComponentName(MainActivity.class)
+                .setGraph(R.navigation.nav_graph)
+                .setDestination(R.id.FirstFragment)
+                .setArguments(getArguments())
+                .createPendingIntent();
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL);
+        b.setSmallIcon(R.drawable.ic_launcher_foreground);
+        b.setContentTitle("Security alert");
+        b.setContentText(contentText);
+        b.setContentIntent(pendingIntent);
+        b.setAutoCancel(true);
+        ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
+    }
+
     private Listener listener;
     private WebSocket ws;
     private boolean connected;
@@ -88,20 +110,7 @@ public class FirstFragment extends Fragment {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
         binding.testNoto.setOnClickListener(view -> {
-            PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
-                    .setComponentName(MainActivity.class)
-                    .setGraph(R.navigation.nav_graph)
-                    .setDestination(R.id.FirstFragment)
-                    .setArguments(getArguments())
-                    .createPendingIntent();
-
-            NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL);
-            b.setSmallIcon(R.drawable.ic_launcher_foreground);
-            b.setContentText("This is a test notification.");
-            b.setContentTitle("Security alert");
-            b.setContentIntent(pendingIntent);
-            b.setAutoCancel(true);
-            ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
+            makeNoto("This is a test notification.");
         });
 
         setDisconnectedState();
