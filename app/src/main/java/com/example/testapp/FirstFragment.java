@@ -108,6 +108,9 @@ public class FirstFragment extends Fragment {
         listener = new Listener();
 
         binding.sendMessage.setOnClickListener(view -> {
+            if (ws == null)
+                makeSocket();
+
             ws.sendText("phone");
         });
 
