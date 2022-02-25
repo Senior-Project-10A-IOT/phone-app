@@ -30,7 +30,7 @@ public class FirstFragment extends Fragment {
 
     private void makeSocket() {
         try {
-            ws = SecurityApplication.factory.createSocket("ws://10.0.2.2:8765/");
+            ws = SecurityApplication.factory.createSocket("ws://gang-and-friends.com:8765/");
         } catch (IOException e) {
             Log.e(SecurityApplication.TAG, "create socket: " + e);
             setDisconnectedState();
