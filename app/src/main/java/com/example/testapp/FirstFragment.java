@@ -73,10 +73,6 @@ public class FirstFragment extends Fragment {
         setDisconnectedState();
         listener = new Listener();
 
-        binding.sendMessage.setOnClickListener(view -> {
-            WebsocketWrapper.sendText("phone");
-        });
-
         binding.connectDisconnect.setOnClickListener(view -> {
             if (WebsocketWrapper.isConnected()) {
                 WebsocketWrapper.disconnect();
