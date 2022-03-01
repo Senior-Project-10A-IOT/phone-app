@@ -4,8 +4,8 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketListener;
 
 public class WebsocketWrapper {
-    private static final String REMOTE_SERVER = "ws://gang-and-friends.com:8765/";
-    private static final String LOCAL_SERVER = "ws://10.0.2.2:8765/";
+    private static final String REMOTE_SERVER = "ws://gang-and-friends.com:8765/phone";
+    private static final String LOCAL_SERVER = "ws://10.0.2.2:8765/phone";
     private static String currentServer = LOCAL_SERVER;
 
     private static WebSocketListener listener;
