@@ -38,6 +38,10 @@ public class FirstFragment extends Fragment {
         binding.connectionStatus.setText("not connected");
     }
 
+    private void setResponse(String response) {
+        binding.socketResponse.setText(response);
+    }
+
     private void makeNoto(String contentText) {
         PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
                 .setComponentName(MainActivity.class)
@@ -68,7 +72,6 @@ public class FirstFragment extends Fragment {
 
         setDisconnectedState();
         listener = new Listener();
-        WebsocketWrapper.connect(listener);
 
         binding.sendMessage.setOnClickListener(view -> {
             WebsocketWrapper.sendText("phone");
@@ -84,6 +87,12 @@ public class FirstFragment extends Fragment {
 
         binding.useRemote.setOnCheckedChangeListener((compoundButton, checked) -> {
             WebsocketWrapper.swapServer();
+
+            if (WebsocketWrapper.isConnected()) {
+                setConnectedState();
+            } else {
+                setDisconnectedState();
+            }
         });
 
         return binding.getRoot();
@@ -109,7 +118,7 @@ public class FirstFragment extends Fragment {
                 makeNoto("whoa is a lot");
             }
 
-            binding.socketResponse.setText(message);
+            setResponse(message);
         }
 
         @Override

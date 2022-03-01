@@ -18,6 +18,7 @@ public class WebsocketWrapper {
                 ws.disconnect();
             }
 
+            SecurityApplication.factory.setConnectionTimeout(1000);
             ws = SecurityApplication.factory.createSocket(currentServer);
             WebsocketWrapper.listener = listener;
 
@@ -33,7 +34,10 @@ public class WebsocketWrapper {
     }
 
     public static void disconnect() {
-        ws.disconnect();
+        if (ws != null) {
+            ws.disconnect();
+        }
+
         connected = false;
     }
 
