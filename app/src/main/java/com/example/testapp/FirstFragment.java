@@ -28,9 +28,12 @@ public class FirstFragment extends Fragment {
     private WebSocket ws;
     private boolean connected;
 
+    private static String REMOTE_SERVER = "ws://gang-and-friends.com:8765/";
+    private static String LOCAL_SERVER = "ws://10.0.2.2:8765/";
+
     private void makeSocket() {
         try {
-            ws = SecurityApplication.factory.createSocket("ws://gang-and-friends.com:8765/");
+            ws = SecurityApplication.factory.createSocket(LOCAL_SERVER);
         } catch (IOException e) {
             Log.e(SecurityApplication.TAG, "create socket: " + e);
             setDisconnectedState();
