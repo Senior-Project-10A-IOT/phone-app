@@ -15,51 +15,27 @@ import androidx.navigation.NavDeepLinkBuilder;
 import com.example.testapp.databinding.FragmentFirstBinding;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public class FirstFragment extends Fragment {
+    private static Listener listener;
     private FragmentFirstBinding binding;
-    private Listener listener;
-    private WebSocket ws;
-    private boolean connected;
-
-    private static String REMOTE_SERVER = "ws://gang-and-friends.com:8765/";
-    private static String LOCAL_SERVER = "ws://10.0.2.2:8765/";
-
-    private void makeSocket() {
-        try {
-            ws = SecurityApplication.factory.createSocket(LOCAL_SERVER);
-        } catch (IOException e) {
-            Log.e(SecurityApplication.TAG, "create socket: " + e);
-            setDisconnectedState();
-            return;
-        }
-
-        ws.addListener(listener);
-        try {
-            ws.connect();
-            setConnectedState();
-        } catch (WebSocketException e) {
-            Log.e(SecurityApplication.TAG, "connect: " + e);
-            setDisconnectedState();
-        }
-    }
 
     private void setConnectedState() {
         binding.connectDisconnect.setText("disconnect");
-        binding.connectionStatus.setText("connected");
-        connected = true;
+        binding.connectionStatus.setText("connected to " + WebsocketWrapper.getCurrentServer());
     }
 
     private void setDisconnectedState() {
+        if (WebsocketWrapper.isConnected()) {
+            return;
+        }
+
         binding.connectDisconnect.setText("connect");
         binding.connectionStatus.setText("not connected");
-        connected = false;
     }
 
     private void makeNoto(String contentText) {
@@ -92,22 +68,22 @@ public class FirstFragment extends Fragment {
 
         setDisconnectedState();
         listener = new Listener();
+        WebsocketWrapper.connect(listener);
 
         binding.sendMessage.setOnClickListener(view -> {
-            if (ws == null)
-                makeSocket();
-
-            ws.sendText("phone");
+            WebsocketWrapper.sendText("phone");
         });
 
         binding.connectDisconnect.setOnClickListener(view -> {
-            if (connected) {
-                ws.disconnect();
-                setDisconnectedState();
+            if (WebsocketWrapper.isConnected()) {
+                WebsocketWrapper.disconnect();
             } else {
-                setConnectedState();
-                makeSocket();
+                WebsocketWrapper.connect(listener);
             }
+        });
+
+        binding.useRemote.setOnCheckedChangeListener((compoundButton, checked) -> {
+            WebsocketWrapper.swapServer();
         });
 
         return binding.getRoot();
@@ -120,8 +96,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ws.disconnect();
-        setDisconnectedState();
+        WebsocketWrapper.disconnect();
         binding = null;
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="31dp"
         android:gravity="center"
         android:text="message"
-        app:layout_constraintBottom_toTopOf="@+id/connectDisconnect"
+        app:layout_constraintBottom_toTopOf="@+id/useRemote"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/socketResponse" />
+        app:layout_constraintTop_toBottomOf="@+id/useRemote" />
 
     <Button
         android:id="@+id/testNoto"
@@ -62,5 +62,16 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sendMessage" />
+
+    <Switch
+        android:id="@+id/useRemote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="use remote server"
+        app:layout_constraintBottom_toTopOf="@+id/connectDisconnect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/socketResponse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
