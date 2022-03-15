@@ -118,6 +118,11 @@ public class FirstFragment extends Fragment {
         }
 
         @Override
+        public void onBinaryMessage(WebSocket ws, byte[] message) {
+            // TODO
+        }
+
+        @Override
         public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
             setConnectedState();
         }
