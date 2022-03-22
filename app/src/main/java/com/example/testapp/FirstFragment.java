@@ -119,7 +119,7 @@ public class FirstFragment extends Fragment {
 
         @Override
         public void onBinaryMessage(WebSocket ws, byte[] message) {
-            // TODO
+            Log.e(SecurityApplication.TAG, "binary");
         }
 
         @Override
