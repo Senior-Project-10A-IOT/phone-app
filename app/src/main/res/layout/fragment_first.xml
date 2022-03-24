@@ -11,7 +11,7 @@
         android:layout_width="320dp"
         android:layout_height="85dp"
         android:gravity="center"
-        android:text="message"
+        android:text="no message yet"
         app:layout_constraintBottom_toTopOf="@+id/useRemote"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -35,7 +35,7 @@
         android:layout_width="219dp"
         android:layout_height="45dp"
         android:text="connect"
-        app:layout_constraintBottom_toTopOf="@+id/testNoto"
+        app:layout_constraintBottom_toTopOf="@+id/showDB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectDisconnect" />
+        app:layout_constraintTop_toBottomOf="@+id/showDB" />
 
     <Switch
         android:id="@+id/useRemote"
@@ -62,5 +62,16 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/socketResponse" />
+
+    <Button
+        android:id="@+id/showDB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show db"
+        app:layout_constraintBottom_toTopOf="@+id/testNoto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connectDisconnect" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

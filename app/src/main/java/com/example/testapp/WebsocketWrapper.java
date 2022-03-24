@@ -50,7 +50,7 @@ public class WebsocketWrapper {
             currentServer = LOCAL_SERVER;
         }
 
-        return connect(listener);
+        return false;
     }
 
     public static boolean isConnected() {

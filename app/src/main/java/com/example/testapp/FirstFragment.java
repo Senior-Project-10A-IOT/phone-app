@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavDeepLinkBuilder;
+import androidx.navigation.Navigation;
 
 import com.example.testapp.databinding.FragmentFirstBinding;
 import com.neovisionaries.ws.client.WebSocket;
@@ -83,12 +85,15 @@ public class FirstFragment extends Fragment {
 
         binding.useRemote.setOnCheckedChangeListener((compoundButton, checked) -> {
             WebsocketWrapper.swapServer();
+        });
 
-            if (WebsocketWrapper.isConnected()) {
-                setConnectedState();
-            } else {
-                setDisconnectedState();
-            }
+        binding.showDB.setOnClickListener(view -> {
+            Fragment fragment = new DatabaseItemFragment();
+            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+            ft.replace(R.id.nav_host_fragment_content_main, fragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.addToBackStack(null);
+            ft.commit();
         });
 
         return binding.getRoot();
