@@ -1,6 +1,8 @@
 package com.example.testapp;
 
 import android.app.PendingIntent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,9 +92,10 @@ public class FirstFragment extends Fragment {
         binding.showDB.setOnClickListener(view -> {
             Fragment fragment = new DatabaseItemFragment();
             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-            ft.replace(R.id.nav_host_fragment_content_main, fragment);
+            ft.hide(this);
+            ft.add(fragment, "idk");
+            ft.addToBackStack("what");
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.addToBackStack(null);
             ft.commit();
         });
 
@@ -125,6 +128,14 @@ public class FirstFragment extends Fragment {
         @Override
         public void onBinaryMessage(WebSocket ws, byte[] message) {
             Log.e(SecurityApplication.TAG, "binary");
+            Log.e(SecurityApplication.TAG, ""+ message.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(message, 0, message.length);
+            if (bitmap != null) {
+                binding.imageView.setImageBitmap(bitmap);
+            } else {
+                Log.e(SecurityApplication.TAG, "fuck");
+            }
+            Log.e(SecurityApplication.TAG, "done");
         }
 
         @Override

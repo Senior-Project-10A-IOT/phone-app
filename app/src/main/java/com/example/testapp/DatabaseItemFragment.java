@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,25 @@ import com.example.testapp.placeholder.PlaceholderContent;
  * A fragment representing a list of Items.
  */
 public class DatabaseItemFragment extends Fragment {
+
+    private void doWorkerStuff() {
+        WorkManager.getInstance(getContext())
+                .getWorkInfosForUniqueWorkLiveData(DatabaseWorker.UNIQUE_NAME)
+                .observe(getViewLifecycleOwner(), workInfos -> {
+                    // TODO
+                    WorkInfo workInfo = workInfos.get(0);
+                    if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                        //binding.networkText.setText(workInfo.getOutputData().getString(""));
+                        //((SecurityApplication) getActivity().getApplication()).retryRequest();
+                    } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
+                        //binding.networkText.setText("Network failed");
+                    }
+                    //} else if (firstLoad) {
+                    //    //binding.networkText.setText("Loading...");
+                    //    //firstLoad = false;
+                    //}
+                });
+    }
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
