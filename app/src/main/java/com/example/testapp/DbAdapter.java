@@ -33,8 +33,8 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DbItem item = data.get(position);
-        holder.hello.setText("hello");
-        holder.world.setText("world" + position);
+        holder.hello.setText(item.string);
+        holder.world.setText("" + position);
     }
 
     @Override
@@ -44,6 +44,10 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     }
 
     public static class DbItem {
+        String string;
+        DbItem(String string) {
+            this.string = string;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
