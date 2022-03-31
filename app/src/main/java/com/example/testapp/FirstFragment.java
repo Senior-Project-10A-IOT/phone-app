@@ -1,6 +1,7 @@
 package com.example.testapp;
 
 import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
@@ -124,6 +125,12 @@ public class FirstFragment extends Fragment {
         //    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         //    ft.commit();
         //});
+
+        binding.showDB.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), DbActivity.class);
+            startActivity(intent);
+        });
+
 
         return binding.getRoot();
     }
