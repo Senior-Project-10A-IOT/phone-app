@@ -14,13 +14,17 @@ import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class DbActivity extends AppCompatActivity {
     DbAdapter adapter;
     public static RequestQueue requestQueue;
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +47,15 @@ public class DbActivity extends AppCompatActivity {
                 .getWorkInfoByIdLiveData(requestId)
                 .observe(this, workInfo -> {
                     if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                        list.add(new DbAdapter.DbItem(workInfo.getOutputData().getString("")));
-                        adapter.notifyItemInserted(0);
+                        String rawJson = workInfo.getOutputData().getString("");
+                        Type listType = new TypeToken<ArrayList<DbAdapter.DbItem>>(){}.getType();
+                        ArrayList<DbAdapter.DbItem> newList = gson.fromJson(rawJson, listType);
+                        for (DbAdapter.DbItem newItem : newList) {
+                            Log.e("", "" + newItem);
+                            list.add(0, newItem);
+                            adapter.notifyItemInserted(0);
+                        }
                     }
-        });
+                });
     }
 }

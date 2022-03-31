@@ -33,7 +33,7 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DbItem item = data.get(position);
-        holder.hello.setText(item.string);
+        holder.hello.setText(item.timestamp);
         holder.world.setText("" + position);
     }
 
@@ -44,9 +44,20 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     }
 
     public static class DbItem {
-        String string;
-        DbItem(String string) {
-            this.string = string;
+        String timestamp;
+        String photo;
+
+        DbItem(String timestamp, String photo) {
+            this.timestamp = timestamp;
+            this.photo = photo;
+        }
+
+        @Override
+        public String toString() {
+            return "DbItem{" +
+                    "timestamp='" + timestamp + '\'' +
+                    ", photo='" + photo + '\'' +
+                    '}';
         }
     }
 
