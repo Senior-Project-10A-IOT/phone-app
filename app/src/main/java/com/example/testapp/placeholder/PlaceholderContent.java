@@ -1,5 +1,9 @@
 package com.example.testapp.placeholder;
 
+import android.util.Log;
+
+import com.example.testapp.SecurityApplication;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

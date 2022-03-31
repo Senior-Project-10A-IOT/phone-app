@@ -3,7 +3,6 @@ package com.example.testapp;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -16,11 +15,11 @@ import java.util.List;
  * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyDatabaseItemRecyclerViewAdapter extends RecyclerView.Adapter<MyDatabaseItemRecyclerViewAdapter.ViewHolder> {
+public class DatabaseViewAdapter extends RecyclerView.Adapter<DatabaseViewAdapter.ViewHolder> {
 
     private final List<PlaceholderItem> mValues;
 
-    public MyDatabaseItemRecyclerViewAdapter(List<PlaceholderItem> items) {
+    public DatabaseViewAdapter(List<PlaceholderItem> items) {
         mValues = items;
     }
 
