@@ -115,15 +115,15 @@ public class FirstFragment extends Fragment {
             WebsocketWrapper.swapServer();
         });
 
-        binding.showDB.setOnClickListener(view -> {
-            Fragment fragment = new DatabaseItemFragment();
-            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-            ft.hide(this);
-            ft.add(fragment, "idk");
-            ft.addToBackStack("what");
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        });
+        //binding.showDB.setOnClickListener(view -> {
+        //    Fragment fragment = new DatabaseItemFragment();
+        //    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+        //    ft.hide(this);
+        //    ft.add(fragment, "idk");
+        //    ft.addToBackStack("what");
+        //    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //    ft.commit();
+        //});
 
         return binding.getRoot();
     }
