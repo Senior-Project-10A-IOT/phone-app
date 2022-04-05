@@ -75,27 +75,7 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        new Thread(() -> {
-            try {
-                String url = "http://gang-and-friends.com:9922/pisound.mp3";
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes.Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .setUsage(AudioAttributes.USAGE_MEDIA)
-                                .build()
-                );
-                Log.e("", "here1");
-                mediaPlayer.setDataSource(url);
-                Log.e("", "here2");
-                mediaPlayer.prepare();
-                Log.e("", "here3");
-                mediaPlayer.start();
-                Log.e("", "here4");
-            } catch (Exception e) {
-                Log.e("fuckj", "" + e);
-            }
-        }).start();
+        AudioPlayer.start();
 
         binding.testNoto.setOnClickListener(view -> {
             makeNoto("This is a test notification.");
