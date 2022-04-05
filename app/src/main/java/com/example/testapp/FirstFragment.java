@@ -103,18 +103,6 @@ public class FirstFragment extends Fragment {
             startActivity(intent);
         });
 
-        binding.playPauseAudio.setOnClickListener(view -> {
-            if (!listening) {
-                AudioPlayer.start();
-                binding.playPauseAudio.setText("Stop audio");
-                listening = true;
-            } else {
-                AudioPlayer.stop();
-                binding.playPauseAudio.setText("Play audio");
-                listening = false;
-            }
-        });
-
         return binding.getRoot();
     }
 
