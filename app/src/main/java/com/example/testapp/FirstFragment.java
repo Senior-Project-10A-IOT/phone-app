@@ -2,8 +2,6 @@ package com.example.testapp;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDeepLinkBuilder;
 
 import com.example.testapp.databinding.FragmentFirstBinding;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketFrame;
@@ -68,10 +70,25 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        //AudioPlayer.start();
-
         setDisconnectedState();
         listener = new Listener();
+
+        ExoPlayer player = new ExoPlayer.Builder(getContext())
+                .setMediaSourceFactory(
+                        new DefaultMediaSourceFactory(getContext())
+                                .setLiveTargetOffsetMs(5000))
+                .build();
+        MediaItem mediaItem = new MediaItem.Builder()
+                .setUri("rtmp://gang-and-friends.com:1935/live/stream")
+                .setLiveConfiguration(
+                        new MediaItem.LiveConfiguration.Builder()
+                                .setMaxPlaybackSpeed(1.02f).
+                                build()
+                ).build();
+        player.setMediaItem(mediaItem);
+
+        StyledPlayerView styledPlayerView = binding.videoPlayer;
+        styledPlayerView.setPlayer(player);
 
         binding.connectDisconnect.setOnClickListener(view -> {
             if (WebsocketWrapper.isConnected()) {
@@ -122,19 +139,6 @@ public class FirstFragment extends Fragment {
             }
 
             setResponse(message);
-        }
-
-        @Override
-        public void onBinaryMessage(WebSocket ws, byte[] message) {
-            Log.e(SecurityApplication.TAG, "binary");
-            Log.e(SecurityApplication.TAG, "" + message.length);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(message, 0, message.length);
-            if (bitmap != null) {
-                binding.imageView.setImageBitmap(bitmap);
-            } else {
-                Log.e(SecurityApplication.TAG, "fuck");
-            }
-            Log.e(SecurityApplication.TAG, "done");
         }
 
         @Override

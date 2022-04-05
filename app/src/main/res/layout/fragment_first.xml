@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/videoPlayer" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -49,15 +49,15 @@
             android:text="Play audio" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="357dp"
-        android:layout_height="257dp"
+    <com.google.android.exoplayer2.ui.StyledPlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="366dp"
+        android:layout_height="263dp"
         app:layout_constraintBottom_toTopOf="@+id/socketResponse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="parent"></com.google.android.exoplayer2.ui.StyledPlayerView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

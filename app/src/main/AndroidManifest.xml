@@ -15,9 +15,6 @@
         android:theme="@style/Theme.Testapp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".VideoPlayerTest"
-            android:exported="false" />
-        <activity
             android:name=".DbActivity"
             android:exported="false" />
         <activity

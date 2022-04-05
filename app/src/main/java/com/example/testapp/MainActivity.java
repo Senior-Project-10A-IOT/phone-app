@@ -2,7 +2,6 @@ package com.example.testapp;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_settings:
-                Intent intent = new Intent(this, VideoPlayerTest.class);
-                startActivity(intent);
                 return true;
             case R.id.app_bar_switch:
                 useLocalWsServer = !item.isChecked();
