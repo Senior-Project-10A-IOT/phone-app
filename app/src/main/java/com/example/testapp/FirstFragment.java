@@ -86,6 +86,7 @@ public class FirstFragment extends Fragment {
                                 build()
                 ).build();
         player.setMediaItem(mediaItem);
+        player.setPlayWhenReady(true);
 
         StyledPlayerView styledPlayerView = binding.videoPlayer;
         styledPlayerView.setPlayer(player);
