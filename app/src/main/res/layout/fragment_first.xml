@@ -12,67 +12,42 @@
         android:layout_height="85dp"
         android:gravity="center"
         android:text="no message yet"
-        app:layout_constraintBottom_toTopOf="@+id/connectionStatus"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <TextView
-        android:id="@+id/connectionStatus"
-        android:layout_width="343dp"
-        android:layout_height="30dp"
-        android:gravity="center"
-        android:text="connection status"
-        app:layout_constraintBottom_toTopOf="@+id/connectDisconnect"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/socketResponse" />
-
-    <Switch
-        android:id="@+id/useRemote"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="use remote server"
-        app:layout_constraintBottom_toBottomOf="@+id/connectDisconnect"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/connectDisconnect"
-        app:layout_constraintTop_toTopOf="@+id/connectDisconnect" />
-
-    <Button
-        android:id="@+id/testNoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test noto"
-        app:layout_constraintBottom_toBottomOf="@+id/showDB"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/showDB"
-        app:layout_constraintTop_toTopOf="@+id/showDB" />
-
-    <Button
-        android:id="@+id/connectDisconnect"
-        android:layout_width="155dp"
-        android:layout_height="46dp"
-        android:text="connect"
-        app:layout_constraintBottom_toTopOf="@+id/showDB"
-        app:layout_constraintEnd_toStartOf="@+id/useRemote"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />
-
-    <Button
-        android:id="@+id/showDB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="show db"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/testNoto"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectDisconnect" />
+        app:layout_constraintTop_toBottomOf="@+id/socketResponse">
+
+        <Button
+            android:id="@+id/showDB"
+            android:layout_width="281dp"
+            android:layout_height="wrap_content"
+            android:text="show db" />
+
+        <Button
+            android:id="@+id/connectDisconnect"
+            android:layout_width="281dp"
+            android:layout_height="wrap_content"
+            android:text="connect" />
+
+        <Button
+            android:id="@+id/playPauseAudio"
+            android:layout_width="281dp"
+            android:layout_height="wrap_content"
+            android:text="Play audio" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView"

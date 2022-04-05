@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.testapp.MainActivity">
+
+    <item
+        android:id="@+id/app_bar_switch"
+        android:orderInCategory="101"
+        android:title="Use local server"
+        android:checkable="true"
+        app:actionLayout="@layout/switch_item" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

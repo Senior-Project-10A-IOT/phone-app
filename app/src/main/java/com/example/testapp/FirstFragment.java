@@ -4,9 +4,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,16 +13,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavDeepLinkBuilder;
-import androidx.navigation.Navigation;
 
 import com.example.testapp.databinding.FragmentFirstBinding;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +29,6 @@ public class FirstFragment extends Fragment {
 
     private void setConnectedState() {
         binding.connectDisconnect.setText("disconnect");
-        binding.connectionStatus.setText("connected to " + WebsocketWrapper.getCurrentServer());
     }
 
     private void setDisconnectedState() {
@@ -44,7 +37,6 @@ public class FirstFragment extends Fragment {
         }
 
         binding.connectDisconnect.setText("connect");
-        binding.connectionStatus.setText("not connected");
     }
 
     private void setResponse(String response) {
@@ -77,10 +69,6 @@ public class FirstFragment extends Fragment {
 
         AudioPlayer.start();
 
-        binding.testNoto.setOnClickListener(view -> {
-            makeNoto("This is a test notification.");
-        });
-
         setDisconnectedState();
         listener = new Listener();
 
@@ -88,29 +76,14 @@ public class FirstFragment extends Fragment {
             if (WebsocketWrapper.isConnected()) {
                 WebsocketWrapper.disconnect();
             } else {
-                WebsocketWrapper.connect(listener);
+                WebsocketWrapper.connect(listener, ((MainActivity) getActivity()).isRemote());
             }
         });
-
-        binding.useRemote.setOnCheckedChangeListener((compoundButton, checked) -> {
-            WebsocketWrapper.swapServer();
-        });
-
-        //binding.showDB.setOnClickListener(view -> {
-        //    Fragment fragment = new DatabaseItemFragment();
-        //    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        //    ft.hide(this);
-        //    ft.add(fragment, "idk");
-        //    ft.addToBackStack("what");
-        //    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        //    ft.commit();
-        //});
 
         binding.showDB.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), DbActivity.class);
             startActivity(intent);
         });
-
 
         return binding.getRoot();
     }
@@ -141,7 +114,7 @@ public class FirstFragment extends Fragment {
         @Override
         public void onBinaryMessage(WebSocket ws, byte[] message) {
             Log.e(SecurityApplication.TAG, "binary");
-            Log.e(SecurityApplication.TAG, ""+ message.length);
+            Log.e(SecurityApplication.TAG, "" + message.length);
             Bitmap bitmap = BitmapFactory.decodeByteArray(message, 0, message.length);
             if (bitmap != null) {
                 binding.imageView.setImageBitmap(bitmap);

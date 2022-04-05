@@ -16,11 +16,11 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.testapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final String CHANNEL = "Hello?";
     public NotificationManagerCompat man;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private boolean useLocalWsServer = false;
 
     private void createNotificationChannel() {
         CharSequence name = "channel naem";
@@ -57,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public boolean isLocal() {
+        return useLocalWsServer;
+    }
+
+    public boolean isRemote() {
+        return !useLocalWsServer;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem checkable = menu.findItem(R.id.app_bar_switch);
+        checkable.setChecked(useLocalWsServer);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -64,9 +79,15 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.app_bar_switch:
+                useLocalWsServer = !item.isChecked();
+                item.setChecked(useLocalWsServer);
+                return true;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

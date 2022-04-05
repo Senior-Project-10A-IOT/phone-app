@@ -1,16 +1,15 @@
 package com.example.testapp;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
-import android.os.Bundle;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -22,8 +21,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class DbActivity extends AppCompatActivity {
-    DbAdapter adapter;
     public static RequestQueue requestQueue;
+    DbAdapter adapter;
     Gson gson = new Gson();
 
     @Override
@@ -48,7 +47,8 @@ public class DbActivity extends AppCompatActivity {
                 .observe(this, workInfo -> {
                     if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
                         String rawJson = workInfo.getOutputData().getString("");
-                        Type listType = new TypeToken<ArrayList<DbAdapter.DbItem>>(){}.getType();
+                        Type listType = new TypeToken<ArrayList<DbAdapter.DbItem>>() {
+                        }.getType();
                         ArrayList<DbAdapter.DbItem> newList = gson.fromJson(rawJson, listType);
                         for (DbAdapter.DbItem newItem : newList) {
                             Log.e("", "" + newItem);

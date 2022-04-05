@@ -74,7 +74,7 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            Log.e("idk","lolsdfklj;fsalk;");
+            Log.e("idk", "lolsdfklj;fsalk;");
             if (itemClickListener != null) {
                 // ???
                 //itemClickListener.onItemClick(view, getBindingAdapterPosition());
