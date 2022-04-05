@@ -37,7 +37,7 @@ public class AudioPlayer {
     }
 
     public static void stop() {
-        mediaPlayer.stop();
+        mediaPlayer.reset();
         thread.interrupt();
     }
 }

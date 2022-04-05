@@ -26,6 +26,7 @@ import java.util.Map;
 public class FirstFragment extends Fragment {
     private static Listener listener;
     private FragmentFirstBinding binding;
+    private boolean listening = false;
 
     private void setConnectedState() {
         binding.connectDisconnect.setText("disconnect");
@@ -67,7 +68,7 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        AudioPlayer.start();
+        //AudioPlayer.start();
 
         setDisconnectedState();
         listener = new Listener();
@@ -83,6 +84,18 @@ public class FirstFragment extends Fragment {
         binding.showDB.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), DbActivity.class);
             startActivity(intent);
+        });
+
+        binding.playPauseAudio.setOnClickListener(view -> {
+            if (!listening) {
+                AudioPlayer.start();
+                binding.playPauseAudio.setText("Stop audio");
+                listening = true;
+            } else {
+                AudioPlayer.stop();
+                binding.playPauseAudio.setText("Play audio");
+                listening = false;
+            }
         });
 
         return binding.getRoot();
