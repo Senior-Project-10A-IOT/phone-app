@@ -42,6 +42,12 @@
             android:layout_height="wrap_content"
             android:text="connect" />
 
+        <Button
+            android:id="@+id/testNoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test noto" />
+
     </LinearLayout>
 
     <com.google.android.exoplayer2.ui.StyledPlayerView

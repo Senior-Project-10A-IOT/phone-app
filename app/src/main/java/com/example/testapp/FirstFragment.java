@@ -1,7 +1,11 @@
 package com.example.testapp;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +32,6 @@ import java.util.Map;
 public class FirstFragment extends Fragment {
     private static Listener listener;
     private FragmentFirstBinding binding;
-    private boolean listening = false;
 
     private void setConnectedState() {
         binding.connectDisconnect.setText("disconnect");
@@ -54,13 +57,25 @@ public class FirstFragment extends Fragment {
                 .setArguments(getArguments())
                 .createPendingIntent();
 
-        NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL);
-        b.setSmallIcon(R.drawable.ic_launcher_foreground);
-        b.setContentTitle("Security alert");
-        b.setContentText(contentText);
-        b.setContentIntent(pendingIntent);
-        b.setAutoCancel(true);
-        ((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
+        Intent christ = new Intent(Intent.ACTION_DIAL);
+        christ.setData(Uri.parse("tel:" + PhoneNumbers.ZACK));
+        PendingIntent pendingIntent1 = PendingIntent.getActivity(getContext(), 0, christ, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(getActivity(), MainActivity.CHANNEL)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Security alert")
+                .setContentText(contentText)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS | NotificationCompat.DEFAULT_SOUND)
+                //.setFullScreenIntent(pendingIntent, true);
+                .addAction(R.drawable.ic_launcher_foreground, "Dial authorities", pendingIntent1);
+        Notification noto = b.build();
+        NotificationManager man = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        man.notify(001, noto);
+        //((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
     }
 
     @Override
@@ -102,6 +117,10 @@ public class FirstFragment extends Fragment {
         binding.showDB.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), DbActivity.class);
             startActivity(intent);
+        });
+
+        binding.testNoto.setOnClickListener(view -> {
+            makeNoto("Test noto!");
         });
 
         return binding.getRoot();

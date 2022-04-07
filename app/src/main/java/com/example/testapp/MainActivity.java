@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,11 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean useLocalWsServer = false;
 
     private void createNotificationChannel() {
-        CharSequence name = "channel naem";
-        String desc = "aahahha";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        CharSequence name = "Security Application";
+        String desc = "Security alerts from your device";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel chan = new NotificationChannel(CHANNEL, name, importance);
         chan.setDescription(desc);
+        chan.enableVibration(true);
+        chan.enableLights(true);
+        chan.setShowBadge(true);
+        chan.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(chan);
     }
@@ -35,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         createNotificationChannel();
         man = NotificationManagerCompat.from(this);
