@@ -70,12 +70,10 @@ public class FirstFragment extends Fragment {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setDefaults(NotificationCompat.DEFAULT_LIGHTS | NotificationCompat.DEFAULT_SOUND)
-                //.setFullScreenIntent(pendingIntent, true);
                 .addAction(R.drawable.ic_launcher_foreground, "Dial authorities", pendingIntent1);
         Notification noto = b.build();
         NotificationManager man = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        man.notify(001, noto);
-        //((MainActivity) getActivity()).man.notify(new java.util.Random().nextInt(), b.build());
+        man.notify(1, noto);
     }
 
     @Override

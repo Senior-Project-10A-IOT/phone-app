@@ -1,11 +1,14 @@
 package com.example.testapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,7 +37,9 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DbItem item = data.get(position);
         holder.hello.setText(item.timestamp);
-        holder.world.setText("" + position);
+        Bitmap bmp = BitmapFactory.decodeResource(inflater.getContext().getResources(), R.raw.fake1);
+        //Bitmap bmp = BitmapFactory.decodeFile(R.raw.fake1);
+        holder.photo.setImageBitmap(bmp);
     }
 
     @Override
@@ -63,12 +68,12 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView hello;
-        TextView world;
+        ImageView photo;
 
         ViewHolder(View itemView) {
             super(itemView);
             hello = itemView.findViewById(R.id.hello);
-            world = itemView.findViewById(R.id.world);
+            photo = itemView.findViewById(R.id.photo);
             itemView.setOnClickListener(this);
         }
 
