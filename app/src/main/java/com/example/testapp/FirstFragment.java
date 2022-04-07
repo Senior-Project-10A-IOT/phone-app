@@ -83,7 +83,9 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        setDisconnectedState();
+        //setDisconnectedState();
+        WebsocketWrapper.connect(listener, true);
+        setConnectedState();
         listener = new Listener();
 
         ExoPlayer player = new ExoPlayer.Builder(getContext())
@@ -140,8 +142,9 @@ public class FirstFragment extends Fragment {
         public void onTextMessage(WebSocket ws, String message) {
             Log.e(SecurityApplication.TAG, message);
 
-            if (message.endsWith("4")) {
-                makeNoto("whoa is a lot");
+            if (!SecurityApplication.eventInProgress) {
+                SecurityApplication.eventInProgress = true;
+                makeNoto("Oh no! Go check your stuff");
             }
 
             setResponse(message);

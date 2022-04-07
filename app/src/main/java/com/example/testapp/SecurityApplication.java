@@ -13,6 +13,8 @@ public class SecurityApplication extends Application {
     public static String TAG = "secapp";
     public static WebSocketFactory factory;
 
+    public static boolean eventInProgress;
+
     @Override
     public void onCreate() {
         super.onCreate();
