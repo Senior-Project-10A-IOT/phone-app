@@ -43,10 +43,10 @@
             android:text="connect" />
 
         <Button
-            android:id="@+id/testNoto"
+            android:id="@+id/armDisarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="test noto" />
+            android:text="disarm" />
 
     </LinearLayout>
 

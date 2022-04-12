@@ -14,6 +14,7 @@ public class SecurityApplication extends Application {
     public static WebSocketFactory factory;
 
     public static boolean eventInProgress;
+    public static boolean armed = true;
 
     @Override
     public void onCreate() {

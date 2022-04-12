@@ -34,14 +34,12 @@ public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
 
     private void setConnectedState() {
+        Log.e("frag", "connected");
         binding.connectDisconnect.setText("disconnect");
     }
 
     private void setDisconnectedState() {
-        if (WebsocketWrapper.isConnected()) {
-            return;
-        }
-
+        Log.e("frag", "disconnected");
         binding.connectDisconnect.setText("connect");
     }
 
@@ -119,8 +117,16 @@ public class FirstFragment extends Fragment {
             startActivity(intent);
         });
 
-        binding.testNoto.setOnClickListener(view -> {
-            makeNoto("Test noto!");
+        binding.armDisarm.setOnClickListener(view -> {
+            if (SecurityApplication.armed) {
+                WebsocketWrapper.sendText("disarm");
+                binding.armDisarm.setText("arm");
+                SecurityApplication.armed = false;
+            } else {
+                WebsocketWrapper.sendText("arm");
+                binding.armDisarm.setText("disarm");
+                SecurityApplication.armed = true;
+            }
         });
 
         return binding.getRoot();
