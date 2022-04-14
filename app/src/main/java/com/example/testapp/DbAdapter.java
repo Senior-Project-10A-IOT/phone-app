@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
@@ -35,7 +38,11 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DbItem item = data.get(position);
-        holder.hello.setText(item.timestamp);
+
+        PrettyTime prettyTime = new PrettyTime();
+        LocalDateTime date = LocalDateTime.parse(item.timestamp);
+        holder.hello.setText(prettyTime.format(date));
+
         String url = "http://gang-and-friends.com:8764/" + item.photo;
         SecurityApplication.logDebug("onbindviewhodl " + url);
         Picasso.get().load(url).into(holder.photo);

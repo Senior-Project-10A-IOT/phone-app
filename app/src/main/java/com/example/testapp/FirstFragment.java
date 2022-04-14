@@ -80,10 +80,8 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
 
-        //setDisconnectedState();
-        WebsocketWrapper.connect(listener, true);
-        setConnectedState();
         listener = new Listener();
+        WebsocketWrapper.connect(listener, true);
 
         ExoPlayer player = new ExoPlayer.Builder(getContext())
                 .setMediaSourceFactory(
