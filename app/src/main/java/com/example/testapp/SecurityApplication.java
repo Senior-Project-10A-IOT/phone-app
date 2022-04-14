@@ -3,6 +3,7 @@ package com.example.testapp;
 import android.app.Application;
 import android.content.res.Configuration;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -15,6 +16,18 @@ public class SecurityApplication extends Application {
 
     public static boolean eventInProgress;
     public static boolean armed = true;
+
+    public static void logErr(String info) {
+        Log.e(TAG, info);
+    }
+
+    public static void logInfo(String info) {
+        Log.i(TAG, info);
+    }
+
+    public static void logDebug(String info) {
+        Log.d(TAG, info);
+    }
 
     @Override
     public void onCreate() {

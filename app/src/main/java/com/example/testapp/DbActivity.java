@@ -1,13 +1,11 @@
 package com.example.testapp;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
@@ -17,7 +15,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ public class DbActivity extends AppCompatActivity {
                         Type listType = new TypeToken<ArrayList<ResponseRow>>() {
                         }.getType();
 
-                        Log.e("wowza", rawJson);
+                        SecurityApplication.logInfo("responded with json " + rawJson);
                         ArrayList<ResponseRow> newList = gson.fromJson(rawJson, listType);
 
                         if (newList != null) {
@@ -67,7 +64,7 @@ public class DbActivity extends AppCompatActivity {
                     } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
                         String errormessage = workInfo.getOutputData().getString("");
                         Toast.makeText(getApplicationContext(), "DB query failed" + errormessage, Toast.LENGTH_SHORT).show();
-                        Log.e("heck", errormessage);
+                        SecurityApplication.logErr("db query " + errormessage);
                     }
                 });
     }

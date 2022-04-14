@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +33,12 @@ public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
 
     private void setConnectedState() {
-        Log.e("frag", "connected");
+        SecurityApplication.logDebug("connected to ws");
         binding.connectDisconnect.setText("disconnect");
     }
 
     private void setDisconnectedState() {
-        Log.e("frag", "disconnected");
+        SecurityApplication.logDebug("disconnected from ws");
         binding.connectDisconnect.setText("connect");
     }
 
@@ -146,7 +145,7 @@ public class FirstFragment extends Fragment {
     private class Listener extends WebSocketAdapter {
         @Override
         public void onTextMessage(WebSocket ws, String message) {
-            Log.e(SecurityApplication.TAG, message);
+            SecurityApplication.logErr("message from pi " + message);
 
             if (!SecurityApplication.eventInProgress) {
                 SecurityApplication.eventInProgress = true;

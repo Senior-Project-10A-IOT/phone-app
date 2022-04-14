@@ -1,9 +1,6 @@
 package com.example.testapp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +37,13 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
         DbItem item = data.get(position);
         holder.hello.setText(item.timestamp);
         String url = "http://gang-and-friends.com:8764/" + item.photo;
-        Log.e("onbindviewholdl, " , url);
+        SecurityApplication.logDebug("onbindviewhodl " + url);
         Picasso.get().load(url).into(holder.photo);
     }
 
     @Override
     public int getItemCount() {
-        Log.e("", "" + data.size());
+        SecurityApplication.logDebug("getIteMCount() = " + data.size());
         return data.size();
     }
 
@@ -81,7 +78,7 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            Log.e("idk", "lolsdfklj;fsalk;");
+            SecurityApplication.logDebug("clicky");
             if (itemClickListener != null) {
                 // ???
                 //itemClickListener.onItemClick(view, getBindingAdapterPosition());
