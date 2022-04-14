@@ -91,6 +91,7 @@ public class FirstFragment extends Fragment {
                         new DefaultMediaSourceFactory(getContext())
                                 .setLiveTargetOffsetMs(5000))
                 .build();
+        player.setPlayWhenReady(true);
         MediaItem mediaItem = new MediaItem.Builder()
                 .setUri("rtmp://gang-and-friends.com:1935/live/stream")
                 .setLiveConfiguration(
@@ -99,7 +100,6 @@ public class FirstFragment extends Fragment {
                                 build()
                 ).build();
         player.setMediaItem(mediaItem);
-        player.setPlayWhenReady(true);
 
         StyledPlayerView styledPlayerView = binding.videoPlayer;
         styledPlayerView.setPlayer(player);

@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
@@ -37,9 +39,9 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DbItem item = data.get(position);
         holder.hello.setText(item.timestamp);
-        Bitmap bmp = BitmapFactory.decodeResource(inflater.getContext().getResources(), R.raw.fake1);
-        //Bitmap bmp = BitmapFactory.decodeFile(R.raw.fake1);
-        holder.photo.setImageBitmap(bmp);
+        String url = "http://gang-and-friends.com:8764/" + item.photo;
+        Log.e("onbindviewholdl, " , url);
+        Picasso.get().load(url).into(holder.photo);
     }
 
     @Override
@@ -50,9 +52,9 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
 
     public static class DbItem {
         String timestamp;
-        String photo;
+        int photo;
 
-        DbItem(String timestamp, String photo) {
+        DbItem(String timestamp, int photo) {
             this.timestamp = timestamp;
             this.photo = photo;
         }
