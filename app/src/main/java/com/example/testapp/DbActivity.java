@@ -1,38 +1,66 @@
 package com.example.testapp;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
-import java.io.InputStream;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class DbActivity extends AppCompatActivity {
+    public static RequestQueue requestQueue;
+    DbAdapter adapter;
+    Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db);
 
-        InputStream is1 = this.getResources().openRawResource(R.raw.screen);
-        Bitmap bm1 = BitmapFactory.decodeStream(is1);
-        ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm1);
+        ArrayList<DbAdapter.DbItem> list = new ArrayList<>();
+        RecyclerView recyclerView = findViewById(R.id.db_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new DbAdapter(this, list);
+        recyclerView.setAdapter(adapter);
 
-        InputStream is2 = this.getResources().openRawResource(R.raw.image2);
-        Bitmap bm2 = BitmapFactory.decodeStream(is2);
-        ((ImageView) findViewById(R.id.imageView2)).setImageBitmap(bm2);
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+        WorkRequest workRequest = OneTimeWorkRequest.from(DownloadWorker.class);
+        UUID requestId = workRequest.getId();
+        WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
 
-        InputStream is3 = this.getResources().openRawResource(R.raw.image3);
-        Bitmap bm3 = BitmapFactory.decodeStream(is3);
-        ((ImageView) findViewById(R.id.imageView3)).setImageBitmap(bm3);
-
-        InputStream is4 = this.getResources().openRawResource(R.raw.image4);
-        Bitmap bm4 = BitmapFactory.decodeStream(is4);
-        ((ImageView) findViewById(R.id.imageView4)).setImageBitmap(bm4);
-
-        InputStream is5 = this.getResources().openRawResource(R.raw.fake1);
-        Bitmap bm5 = BitmapFactory.decodeStream(is5);
-        ((ImageView) findViewById(R.id.imageView5)).setImageBitmap(bm5);
+        WorkManager
+                .getInstance(getApplicationContext())
+                .getWorkInfoByIdLiveData(requestId)
+                .observe(this, workInfo -> {
+                    if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                        String rawJson = workInfo.getOutputData().getString("");
+                        Type listType = new TypeToken<ArrayList<DbAdapter.DbItem>>() {
+                        }.getType();
+                        ArrayList<DbAdapter.DbItem> newList = gson.fromJson(rawJson, listType);
+                        if (newList != null) {
+                            for (DbAdapter.DbItem newItem : newList) {
+                                Log.e("", "" + newItem);
+                                list.add(0, newItem);
+                                adapter.notifyItemInserted(0);
+                            }
+                        }
+                    } else if (workInfo.getState() != null && workInfo.getState() == WorkInfo.State.FAILED) {
+                        Toast.makeText(getApplicationContext(), "DB query failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
