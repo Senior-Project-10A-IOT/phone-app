@@ -145,10 +145,7 @@ public class FirstFragment extends Fragment {
         public void onTextMessage(WebSocket ws, String message) {
             SecurityApplication.logErr("message from pi " + message);
 
-            if (!SecurityApplication.eventInProgress) {
-                SecurityApplication.eventInProgress = true;
-                makeNoto("Oh no! Go check your stuff");
-            }
+            makeNoto("Oh no! Go check your stuff");
 
             setResponse(message);
         }

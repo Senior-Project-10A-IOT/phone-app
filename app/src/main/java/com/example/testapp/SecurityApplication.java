@@ -14,7 +14,6 @@ public class SecurityApplication extends Application {
     public static String TAG = "secapp";
     public static WebSocketFactory factory;
 
-    public static boolean eventInProgress;
     public static boolean armed = true;
 
     public static void logErr(String info) {
