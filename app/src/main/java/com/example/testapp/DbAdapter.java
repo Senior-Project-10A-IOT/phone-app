@@ -40,6 +40,7 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
         DbItem item = data.get(position);
 
         PrettyTime prettyTime = new PrettyTime();
+        SecurityApplication.logErr(item.timestamp);
         LocalDateTime date = LocalDateTime.parse(item.timestamp);
         holder.hello.setText(prettyTime.format(date));
 

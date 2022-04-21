@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -23,6 +24,7 @@ import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import java.util.List;
@@ -40,6 +42,16 @@ public class FirstFragment extends Fragment {
     private void setDisconnectedState() {
         SecurityApplication.logDebug("disconnected from ws");
         binding.connectDisconnect.setText("connect");
+    }
+
+    private void setArmedState() {
+        SecurityApplication.logDebug("armed");
+        binding.armDisarm.setText("disarm");
+    }
+
+    private void setDisarmedState() {
+        SecurityApplication.logDebug("disarmed");
+        binding.armDisarm.setText("arm");
     }
 
     private void setResponse(String response) {
@@ -82,6 +94,8 @@ public class FirstFragment extends Fragment {
 
         listener = new Listener();
         WebsocketWrapper.connect(listener, true);
+        setDisarmedState();
+        WebsocketWrapper.sendText(Messages.ARM);
 
         ExoPlayer player = new ExoPlayer.Builder(getContext())
                 .setMediaSourceFactory(
@@ -102,6 +116,7 @@ public class FirstFragment extends Fragment {
         styledPlayerView.setPlayer(player);
 
         binding.connectDisconnect.setOnClickListener(view -> {
+            SecurityApplication.logErr("cdc " + WebsocketWrapper.isConnected());
             if (WebsocketWrapper.isConnected()) {
                 WebsocketWrapper.disconnect();
             } else {
@@ -116,13 +131,9 @@ public class FirstFragment extends Fragment {
 
         binding.armDisarm.setOnClickListener(view -> {
             if (SecurityApplication.armed) {
-                WebsocketWrapper.sendText("disarm");
-                binding.armDisarm.setText("arm");
-                SecurityApplication.armed = false;
+                WebsocketWrapper.sendText(Messages.DISARM);
             } else {
-                WebsocketWrapper.sendText("arm");
-                binding.armDisarm.setText("disarm");
-                SecurityApplication.armed = true;
+                WebsocketWrapper.sendText(Messages.ARM);
             }
         });
 
@@ -143,9 +154,20 @@ public class FirstFragment extends Fragment {
     private class Listener extends WebSocketAdapter {
         @Override
         public void onTextMessage(WebSocket ws, String message) {
-            SecurityApplication.logErr("message from pi " + message);
+            SecurityApplication.logErr("message from pi '" + message + "'");
 
-            makeNoto("Oh no! Go check your stuff");
+            //makeNoto("Oh no! Go check your stuff");
+            if (message.equals(Messages.ARMED)) {
+                SecurityApplication.armed = true;
+                setArmedState();
+                Toast.makeText(getActivity().getBaseContext(), "Armed!", Toast.LENGTH_SHORT).show();
+            } else if (message.equals(Messages.DISARMED)) {
+                SecurityApplication.armed = false;
+                setDisarmedState();
+                Toast.makeText(getActivity().getBaseContext(), "Disarmed", Toast.LENGTH_SHORT).show();
+            } else {
+                makeNoto("Oh no! " + message);
+            }
 
             setResponse(message);
         }
@@ -158,6 +180,14 @@ public class FirstFragment extends Fragment {
         @Override
         public void onDisconnected(WebSocket ws, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) {
             setDisconnectedState();
+            WebsocketWrapper.disconnect();
+        }
+
+        @Override
+        public void onError(WebSocket ws, WebSocketException cause) {
+            SecurityApplication.logErr("error - " + cause);
+            setDisconnectedState();
+            WebsocketWrapper.disconnect();
         }
     }
 }
