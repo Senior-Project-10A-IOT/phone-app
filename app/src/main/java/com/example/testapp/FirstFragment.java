@@ -54,10 +54,6 @@ public class FirstFragment extends Fragment {
         binding.armDisarm.setText("arm");
     }
 
-    private void setResponse(String response) {
-        binding.socketResponse.setText(response);
-    }
-
     private void makeNoto(String contentText) {
         PendingIntent pendingIntent = new NavDeepLinkBuilder(getContext())
                 .setComponentName(MainActivity.class)
@@ -168,8 +164,6 @@ public class FirstFragment extends Fragment {
             } else {
                 makeNoto("Oh no! " + message);
             }
-
-            setResponse(message);
         }
 
         @Override
