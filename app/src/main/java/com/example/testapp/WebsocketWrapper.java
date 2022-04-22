@@ -53,6 +53,7 @@ public class WebsocketWrapper {
     }
 
     public static void sendText(String text) {
+        SecurityApplication.logDebug("send message '" + text + "'");
         ws.sendText(text);
     }
 }

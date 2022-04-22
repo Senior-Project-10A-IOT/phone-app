@@ -43,11 +43,13 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
         DbItem item = data.get(position);
 
         String timestamp = item.timestamp.replace('T', ' ');
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT);
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(timestamp, formatter);
+        DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT);
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(timestamp, timestampFormatter);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+        String time = zonedDateTime.toLocalDate() + " " + zonedDateTime.format(timeFormatter);
 
         PrettyTime prettyTime = new PrettyTime();
-        holder.hello.setText(prettyTime.format(zonedDateTime));
+        holder.hello.setText(time + "\n" + prettyTime.format(zonedDateTime));
 
         String url = "http://gang-and-friends.com:8764/" + item.photo;
         SecurityApplication.logDebug("onbindviewhodl " + url);

@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -56,6 +57,7 @@ public class DbActivity extends AppCompatActivity {
                         ArrayList<ResponseRow> newList = gson.fromJson(rawJson, listType);
 
                         if (newList != null) {
+                            Collections.reverse(newList);
                             for (ResponseRow row : newList) {
                                 list.add(0, new DbAdapter.DbItem(row.timestamp, row.id));
                                 adapter.notifyItemInserted(0);
