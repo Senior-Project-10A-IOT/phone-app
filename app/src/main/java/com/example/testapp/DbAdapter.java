@@ -16,12 +16,15 @@ import com.squareup.picasso.Picasso;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     private List<DbItem> data;
     private LayoutInflater inflater;
     private AdapterView.OnItemClickListener itemClickListener;
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSSSSz";
 
     DbAdapter(Context context, List<DbItem> data) {
         this.inflater = LayoutInflater.from(context);
@@ -39,10 +42,12 @@ public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DbItem item = data.get(position);
 
+        String timestamp = item.timestamp.replace('T', ' ');
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT);
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(timestamp, formatter);
+
         PrettyTime prettyTime = new PrettyTime();
-        SecurityApplication.logErr(item.timestamp);
-        LocalDateTime date = LocalDateTime.parse(item.timestamp);
-        holder.hello.setText(prettyTime.format(date));
+        holder.hello.setText(prettyTime.format(zonedDateTime));
 
         String url = "http://gang-and-friends.com:8764/" + item.photo;
         SecurityApplication.logDebug("onbindviewhodl " + url);
