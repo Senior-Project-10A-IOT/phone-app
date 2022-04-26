@@ -1,27 +1,87 @@
 package com.example.testapp;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.testapp.databinding.ActivityMainBinding;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.ui.StyledPlayerView;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFrame;
+
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL = "Hello?";
+    private static Listener listener;
     public NotificationManagerCompat man;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private boolean useLocalWsServer = false;
+
+    private void setConnectedState() {
+        SecurityApplication.logDebug("connected to ws");
+        binding.innerlayout.connectDisconnect.setText("disconnect");
+    }
+
+    private void setDisconnectedState() {
+        SecurityApplication.logDebug("disconnected from ws");
+        binding.innerlayout.connectDisconnect.setText("connect");
+    }
+
+    private void setArmedState() {
+        SecurityApplication.logDebug("armed");
+        binding.innerlayout.armDisarm.setText("disarm");
+    }
+
+    private void setDisarmedState() {
+        SecurityApplication.logDebug("disarmed");
+        binding.innerlayout.armDisarm.setText("arm");
+    }
+
+    private void makeNoto(String contentText) {
+        Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+        dialIntent.setData(Uri.parse("tel:" + PhoneNumbers.ZACK));
+        PendingIntent pendingDialIntent = PendingIntent.getActivity(getBaseContext(), 0, dialIntent, PendingIntent.FLAG_IMMUTABLE);
+
+        Intent navIntent = new Intent(getBaseContext(), MainActivity.class);
+        navIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingNavIntent = PendingIntent.getActivity(getBaseContext(), 0, navIntent, 0);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this, MainActivity.CHANNEL)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Security alert")
+                .setContentText(contentText)
+                .setContentIntent(pendingNavIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setDefaults(NotificationCompat.DEFAULT_LIGHTS | NotificationCompat.DEFAULT_SOUND)
+                .addAction(R.drawable.ic_launcher_foreground, "Dial authorities", pendingDialIntent);
+        Notification noto = b.build();
+        NotificationManager man = (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        man.notify(1, noto);
+    }
+
 
     private void createNotificationChannel() {
         CharSequence name = "Security Application";
@@ -41,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+            }
+            makeNoto("wow!");
+        }).start();
+
         createNotificationChannel();
         man = NotificationManagerCompat.from(this);
 
@@ -49,9 +117,50 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        listener = new Listener();
+        WebsocketWrapper.connect(listener, true);
+        setDisarmedState();
+        WebsocketWrapper.sendText(Messages.ARM);
+
+        ExoPlayer player = new ExoPlayer.Builder(getBaseContext())
+                .setMediaSourceFactory(
+                        new DefaultMediaSourceFactory(getBaseContext())
+                                .setLiveTargetOffsetMs(5000))
+                .build();
+        player.setPlayWhenReady(true);
+        MediaItem mediaItem = new MediaItem.Builder()
+                .setUri("rtmp://gang-and-friends.com:1935/live/stream")
+                .setLiveConfiguration(
+                        new MediaItem.LiveConfiguration.Builder()
+                                .setMaxPlaybackSpeed(1.02f).
+                                build()
+                ).build();
+        player.setMediaItem(mediaItem);
+
+        StyledPlayerView styledPlayerView = binding.innerlayout.videoPlayer;
+        styledPlayerView.setPlayer(player);
+
+        binding.innerlayout.connectDisconnect.setOnClickListener(view -> {
+            SecurityApplication.logErr("cdc " + WebsocketWrapper.isConnected());
+            if (WebsocketWrapper.isConnected()) {
+                WebsocketWrapper.disconnect();
+            } else {
+                WebsocketWrapper.connect(listener, this.isRemote());
+            }
+        });
+
+        binding.innerlayout.showDB.setOnClickListener(view -> {
+            Intent intent = new Intent(getBaseContext(), DbActivity.class);
+            startActivity(intent);
+        });
+
+        binding.innerlayout.armDisarm.setOnClickListener(view -> {
+            if (SecurityApplication.armed) {
+                WebsocketWrapper.sendText(Messages.DISARM);
+            } else {
+                WebsocketWrapper.sendText(Messages.ARM);
+            }
+        });
     }
 
     @Override
@@ -97,10 +206,41 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+    private class Listener extends WebSocketAdapter {
+        @Override
+        public void onTextMessage(WebSocket ws, String message) {
+            SecurityApplication.logErr("message from pi '" + message + "'");
+
+            //makeNoto("Oh no! Go check your stuff");
+            if (message.equals(Messages.ARMED)) {
+                SecurityApplication.armed = true;
+                setArmedState();
+                Toast.makeText(getBaseContext(), "Armed!", Toast.LENGTH_SHORT).show();
+            } else if (message.equals(Messages.DISARMED)) {
+                SecurityApplication.armed = false;
+                setDisarmedState();
+                Toast.makeText(getBaseContext(), "Disarmed", Toast.LENGTH_SHORT).show();
+            } else {
+                makeNoto("Oh no! " + message);
+            }
+        }
+
+        @Override
+        public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
+            setConnectedState();
+        }
+
+        @Override
+        public void onDisconnected(WebSocket ws, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) {
+            setDisconnectedState();
+            WebsocketWrapper.disconnect();
+        }
+
+        @Override
+        public void onError(WebSocket ws, WebSocketException cause) {
+            SecurityApplication.logErr("error - " + cause);
+            setDisconnectedState();
+            WebsocketWrapper.disconnect();
+        }
     }
 }
