@@ -101,14 +101,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (Exception e) {
-            }
-            makeNoto("wow!");
-        }).start();
-
         createNotificationChannel();
         man = NotificationManagerCompat.from(this);
 
