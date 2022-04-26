@@ -15,16 +15,15 @@ import com.squareup.picasso.Picasso;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DbAdapter extends RecyclerView.Adapter<DbAdapter.ViewHolder> {
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSSSSz";
     private List<DbItem> data;
     private LayoutInflater inflater;
     private AdapterView.OnItemClickListener itemClickListener;
-    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSSSSz";
 
     DbAdapter(Context context, List<DbItem> data) {
         this.inflater = LayoutInflater.from(context);
