@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
                 .addAction(R.drawable.ic_launcher_foreground, "Dial authorities", pendingDialIntent);
         Notification noto = b.build();
         NotificationManager man = (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        man.notify(1, noto);
+        man.notify(notos++, noto);
     }
-
+    private static int notos = 1;
 
     private void createNotificationChannel() {
         CharSequence name = "Security Application";
@@ -212,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 SecurityApplication.armed = false;
                 setDisarmedState();
                 Toast.makeText(getBaseContext(), "Disarmed", Toast.LENGTH_SHORT).show();
+            } else if (message.equals(Messages.MOTION_EVENT)) {
+                makeNoto("Oh no! Motion detected.");
             } else {
                 makeNoto("Oh no! " + message);
             }
