@@ -20,8 +20,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import com.example.testapp.databinding.ActivityMainBinding;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.util.EventLogger;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -114,23 +122,34 @@ public class MainActivity extends AppCompatActivity {
         setDisarmedState();
         WebsocketWrapper.sendText(Messages.ARM);
 
+        DefaultTrackSelector trackSelector = new DefaultTrackSelector(getBaseContext(), new AdaptiveTrackSelection.Factory());
+        trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
         ExoPlayer player = new ExoPlayer.Builder(getBaseContext())
+                .setTrackSelector(trackSelector)
+                .setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(getBaseContext()))
                 .setMediaSourceFactory(
                         new DefaultMediaSourceFactory(getBaseContext())
                                 .setLiveTargetOffsetMs(5000))
                 .build();
+        player.addAnalyticsListener(new EventLogger(null));
         player.setPlayWhenReady(true);
+
         MediaItem mediaItem = new MediaItem.Builder()
-                .setUri("rtmp://gang-and-friends.com:1935/live/stream")
+                .setUri("rtmp://gang-and-friends.com/live/stream live=1")
                 .setLiveConfiguration(
                         new MediaItem.LiveConfiguration.Builder()
-                                .setMaxPlaybackSpeed(1.02f).
-                                build()
+                                .setMaxPlaybackSpeed(1.02f)
+                                .build()
                 ).build();
-        player.setMediaItem(mediaItem);
+        //player.setMediaItem(mediaItem);
 
         StyledPlayerView styledPlayerView = binding.innerlayout.videoPlayer;
+        styledPlayerView.setShowBuffering(StyledPlayerView.SHOW_BUFFERING_ALWAYS);
         styledPlayerView.setPlayer(player);
+
+        ProgressiveMediaSource progressiveMediaSource = new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
+                .createMediaSource(mediaItem);
+        player.setMediaSource(progressiveMediaSource);
 
         binding.innerlayout.connectDisconnect.setOnClickListener(view -> {
             SecurityApplication.logErr("cdc " + WebsocketWrapper.isConnected());
